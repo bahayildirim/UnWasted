@@ -10,51 +10,95 @@ import {
   Card,
 } from "react-bootstrap";
 
+import React, { useState } from "react";
+import {
+  MDBContainer,
+  MDBNavbar,
+  MDBNavbarBrand,
+  MDBNavbarToggler,
+  MDBIcon,
+  MDBNavbarNav,
+  MDBNavbarItem,
+  MDBNavbarLink,
+  MDBBtn,
+  MDBDropdown,
+  MDBDropdownToggle,
+  MDBDropdownMenu,
+  MDBDropdownItem,
+  MDBCollapse,
+} from "mdb-react-ui-kit";
+
 import "./Navbar.style.css";
 
 import Logo from "../Navbar/Assets/Logo.svg";
 
 function NavScrollExample() {
+  const [showBasic, setShowBasic] = useState(false);
+
   return (
-    <Navbar bg="light" expand="lg" className="nav">
-      <Container fluid className="nav">
-        <Navbar.Brand href="#">
-          <img src={Logo} className="logo" alt="logo" />
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbarScroll" />
-        <Navbar.Collapse id="navbarScroll">
-          <Nav
-            className="me-auto my-2 my-lg-0"
-            style={{ maxHeight: "100px" }}
-            navbarScroll
-          >
-            <Stack direction="horizontal" gap={5} className=" mx-auto">
-              <Nav.Link href="#action1" className="nav-text">
+    <MDBNavbar expand="lg" light>
+      <MDBContainer fluid>
+        <MDBNavbarBrand href="#">
+          <img src={Logo} height="30" alt="" loading="lazy" />
+        </MDBNavbarBrand>
+
+        <MDBNavbarToggler
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+          onClick={() => setShowBasic(!showBasic)}
+        >
+          <MDBIcon icon="bars" fas />
+        </MDBNavbarToggler>
+
+        <MDBCollapse navbar show={showBasic}>
+          <MDBNavbarNav className="mr-auto mb-2 mb-lg-0">
+            <MDBNavbarItem>
+              <MDBNavbarLink active aria-current="page" href="#">
                 Home
-              </Nav.Link>
-              <Nav.Link href="#action2" className="nav-text">
-                Packages
-              </Nav.Link>
-              <Nav.Link href="#action3" className="nav-text">
-                Review
-              </Nav.Link>
-              <Nav.Link href="#action4" className="nav-text">
-                About Us
-              </Nav.Link>
-            </Stack>
-          </Nav>
-          <Form className="d-flex">
-            <Form.Control
+              </MDBNavbarLink>
+            </MDBNavbarItem>
+            <MDBNavbarItem>
+              <MDBNavbarLink href="#">Link</MDBNavbarLink>
+            </MDBNavbarItem>
+
+            <MDBNavbarItem>
+              <MDBDropdown>
+                <MDBDropdownToggle tag="a" className="nav-link" role="button">
+                  Dropdown
+                </MDBDropdownToggle>
+                <MDBDropdownMenu>
+                  <MDBDropdownItem link>Action</MDBDropdownItem>
+                  <MDBDropdownItem link>Another action</MDBDropdownItem>
+                  <MDBDropdownItem link>Something else here</MDBDropdownItem>
+                </MDBDropdownMenu>
+              </MDBDropdown>
+            </MDBNavbarItem>
+
+            <MDBNavbarItem>
+              <MDBNavbarLink
+                disabled
+                href="#"
+                tabIndex={-1}
+                aria-disabled="true"
+              >
+                Disabled
+              </MDBNavbarLink>
+            </MDBNavbarItem>
+          </MDBNavbarNav>
+
+          <form className="d-flex input-group w-auto">
+            <input
               type="search"
-              placeholder="Search"
-              className="me-2 search-bar"
+              className="form-control"
+              placeholder="Type query"
               aria-label="Search"
             />
-            <Button variant="outline-success">Search</Button>
-          </Form>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+            <MDBBtn color="primary">Search</MDBBtn>
+          </form>
+        </MDBCollapse>
+      </MDBContainer>
+    </MDBNavbar>
   );
 }
 
