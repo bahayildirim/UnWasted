@@ -5,7 +5,62 @@ import { Button, Card } from "react-bootstrap";
 import apple from "./Assets/apple.jpg";
 import ArkaPlan from "./Assets/arkaplan.jpg";
 
-import React from "react";
+import React, { useEffect } from "react";
+import { useState } from "react";
+
+
+export default function Profile() {
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then(response => response.json())
+      .then(response => setData(response))
+
+  }, [])
+  return (
+
+
+
+    <div className="main">
+
+      <Navbar class="position-absolute" />
+
+      <div className=" main2">
+        <div className="profileInfo">
+          {data && data.map((data) => (
+            <div key={data.id} className="info">
+              <p>{data.name}</p>
+            </div>
+          )
+            
+          )}
+          <div className="info">
+            <p>UserName</p>
+          </div>
+          <div className="info">
+            <p>Password</p>
+          </div>
+          <div className="info">
+            <p>Mail</p>
+          </div>
+          <div className="info">
+            <p>Phone</p>
+          </div>
+          <div className="info">
+            <p>Adress</p>
+          </div>
+          <button className="editbutton" > Edit </button>
+
+        </div>
+      </div>
+
+
+    </div>
+
+  );
+}
+/*
 import {
   MDBCol,
   MDBContainer,
@@ -18,12 +73,9 @@ import {
   MDBIcon,
 } from "mdb-react-ui-kit";
 
-export default function Profile() {
-  return (
-    <div className="main">
-      <section className="vh-100" style={{ backgroundImage: { ArkaPlan } }}>
-        <Navbar />
-        <MDBContainer className="py-5 h-100">
+
+
+<MDBContainer className="py-5 h-100">
           <MDBRow className="justify-content-center align-items-center h-100">
             <MDBCol lg="6" className="mb-4 mb-lg-0">
               <MDBCard className="mb-3" style={{ borderRadius: ".5rem" }}>
@@ -100,8 +152,4 @@ export default function Profile() {
               </MDBCard>
             </MDBCol>
           </MDBRow>
-        </MDBContainer>
-      </section>
-    </div>
-  );
-}
+        </MDBContainer> */
