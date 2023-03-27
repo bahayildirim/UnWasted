@@ -14,8 +14,8 @@ export default function Profile() {
 
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/users')
-      .then(response => response.json())
-      .then(response => setData(response))
+      .then(response => response.text())
+      .then(response => console.log(response))
 
   }, [])
   return (
