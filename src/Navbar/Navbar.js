@@ -59,43 +59,39 @@ function NavScrollExample() {
               </MDBNavbarLink>
             </MDBNavbarItem>
             <MDBNavbarItem>
-              <MDBNavbarLink href="#">Link</MDBNavbarLink>
-            </MDBNavbarItem>
-
-            <MDBNavbarItem>
-              <MDBDropdown>
-                <MDBDropdownToggle tag="a" className="nav-link" role="button">
-                  Dropdown
-                </MDBDropdownToggle>
-                <MDBDropdownMenu>
-                  <MDBDropdownItem link>Action</MDBDropdownItem>
-                  <MDBDropdownItem link>Another action</MDBDropdownItem>
-                  <MDBDropdownItem link>Something else here</MDBDropdownItem>
-                </MDBDropdownMenu>
-              </MDBDropdown>
-            </MDBNavbarItem>
-
-            <MDBNavbarItem>
-              <MDBNavbarLink
-                disabled
-                href="#"
-                tabIndex={-1}
-                aria-disabled="true"
-              >
-                Disabled
+              <MDBNavbarLink active aria-current="page" href="#">
+                Packages
               </MDBNavbarLink>
             </MDBNavbarItem>
+            <MDBNavbarItem>
+              <MDBNavbarLink active aria-current="page" href="#">
+                Review
+              </MDBNavbarLink>
+            </MDBNavbarItem>
+            <MDBNavbarItem>
+              <MDBNavbarLink active aria-current="page" href="#">
+                About Us
+              </MDBNavbarLink>
+            </MDBNavbarItem>
+
           </MDBNavbarNav>
 
           <form className="d-flex input-group w-auto">
             <input
               type="search"
               className="form-control"
-              placeholder="Type query"
+              placeholder="Search"
               aria-label="Search"
             />
-            <MDBBtn color="primary">Search</MDBBtn>
+            <MDBBtn color="#EDCFA9"><i class="fas fa-search"></i></MDBBtn>
           </form>
+          <form className="d-flex input-group w-auto">
+          <MDBBtn outline color="#EDCFA9" size="sm" type='button'>
+          SignOut
+        </MDBBtn>
+        
+          </form>
+         
         </MDBCollapse>
       </MDBContainer>
     </MDBNavbar>
