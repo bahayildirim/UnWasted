@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './LoginRegister.css';
 import { Login } from './Login';
 import { Register } from './Register';
@@ -8,6 +8,14 @@ function LoginRegister() {
   const toggleForm = (formName) => {
     setCurrentForm(formName);
   }
+
+  const [login, setLogin] = useState([])
+
+  useEffect(() => {
+    fetch('/login')
+      .then(response => response.text())
+      .then(response => console.log(response))
+    }, [])
 
   return (
     <div className="App">

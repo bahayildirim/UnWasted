@@ -18,3 +18,7 @@
 .stack {
   background-color: white;
 }
+
+.active{
+  color: #EDCFA9 !important;
+}
