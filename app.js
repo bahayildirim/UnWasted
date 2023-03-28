@@ -1,9 +1,11 @@
 const express = require("express");
 const app = express();
 const sqlite3 = require("sqlite3");
+const cors = require("cors");
 
 app.use(express.json()); // Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
+app.use(cors());
 
 //Connect to the database or create one if it doesn't exist
 var db = new sqlite3.Database(
@@ -24,6 +26,7 @@ function createUserDatabase() {
   var newdb = new sqlite3.Database("./db/userInfo.db", (err) => {
     if (err) {
       console.log("Getting error " + err);
+      // eslint-disable-next-line no-undef
       exit(1);
     }
     createTables(newdb);
@@ -56,15 +59,15 @@ app.post("/register", (req, res) => {
     }
   );
   console.log("Account registered: " + username + " " + password + " " + email);
-  res.redirect("/");
+  res.redirect("/login");
 });
 
 //Checks login information and either redirects to login page or to home page depending on a successful login
-app.get("/login", (req, res) => {
-  const email = req.query.email;
-  const password = req.query.password;
+app.post("/login", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
   db.get(
-    `SELECT email, password FROM Users WHERE email = "${email}" AND password = "${password}"`,
+    `SELECT * FROM Users WHERE email = "${email}" AND password = "${password}"`,
     (err, row) => {
       if (err) {
         console.log(err.message);
@@ -80,7 +83,7 @@ app.get("/login", (req, res) => {
       }
     }
   );
-  res.redirect("/");
+  res.redirect("/anasayfa");
 });
 
 const PORT = process.env.PORT || 8080;

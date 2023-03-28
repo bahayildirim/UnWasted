@@ -1,16 +1,29 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import Profile from "./Profile/Profile";
+import Login from "./LoginRegister/App";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Profile />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Profile />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 

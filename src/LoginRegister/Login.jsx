@@ -2,6 +2,7 @@ import React, {
   useState,
 } from "react"; /*useState Bileşeni globalde state yönetmemizi sağlar*/
 import "./LoginRegister.css";
+import Axios from "axios";
 import LogRegImage from "./Assets/LogRegImage.png";
 import Logo from "./Assets/Logo.svg";
 
@@ -9,11 +10,21 @@ import Logo from "./Assets/Logo.svg";
 export const Login = (props) => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-
+  console.log("email: " + email + " pass: " + pass);
+  console.log("logine girildi");
   const handleSubmit = (e) => {
     /*Capture when user submit form*/
-    e.preventDefault(); /*Bu yapilmazsa sayfa reload atar state kaybolur*/
+    /*Bu yapilmazsa sayfa reload atar state kaybolur*/
     console.log(email);
+  };
+
+  const login = () => {
+    Axios.post("http://localhost:8080/login", {
+      email: email,
+      password: pass,
+    }).then((response) => {
+      console.log(response);
+    });
   };
 
   return (
@@ -47,7 +58,9 @@ export const Login = (props) => {
             name="password"
           />
           <br></br>
-          <button type="submit">Log In</button>
+          <button type="submit" onClick={login}>
+            Log In
+          </button>
         </form>
 
         <button

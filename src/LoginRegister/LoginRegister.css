@@ -22,7 +22,7 @@
   .auth-form-container {
     padding: 5rem;
     padding-left: 5%;
-    width: 420px;
+    width: 35%;
     border: 1px solid #aa4a30;
     border-radius: 10px;
     background-color: #e89f71;
@@ -77,8 +77,8 @@ button {
   left: 35%;
   top: 50%;
   transform: translate(-50%, -50%);
-  height: 52rem;
-  width: 65rem;
+  height: 100%;
+  width: 60%;
 }
 
 .Logo {
@@ -86,8 +86,20 @@ button {
   left: 12%;
   top: 22%;
   transform: translate(-50%, -50%);
-  height: 20rem;
-  width: 20rem;
+  height: 35%;
+  width: 20%;
+}
+
+.label {
+  color: white;
+  font-size: large;
+}
+
+.DonatorCheckBox {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: end;
 }
 
 /*
