@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import { Button, Card } from "react-bootstrap";
 import apple from "./Assets/apple.jpg";
 import ArkaPlan from "./Assets/arkaplan.jpg";
-import { useState ,useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   MDBCol,
   MDBContainer,
@@ -16,9 +16,18 @@ import {
   MDBTypography,
   MDBIcon,
   MDBBtn,
+  MDBInput,
+  MDBInputGroup,
 } from "mdb-react-ui-kit";
 
 export default function Profile() {
+  const [change, setChange] = useState("flase");
+  const [username, setUserName] = useState("");
+
+  function handleForm(state) {
+    setChange(!state);
+  }
+
   return (
     <div className="main">
       <section className="vh-100" style={{ backgroundImage: { ArkaPlan } }}>
@@ -45,8 +54,16 @@ export default function Profile() {
                     />
                     <MDBTypography tag="h5">Marie Horwitz</MDBTypography>
                     <MDBCardText>Donator/Buyer</MDBCardText>
-                    <MDBBtn className='ms-2' tag='a' outline rounded color='light' floating>
-                      <MDBIcon fas icon='edit' />
+                    <MDBBtn
+                      className="ms-2"
+                      tag="a"
+                      outline
+                      rounded
+                      color="light"
+                      floating
+                      onClick={() => handleForm(change)}
+                    >
+                      <MDBIcon fas icon="edit" />
                     </MDBBtn>
                   </MDBCol>
                   <MDBCol md="8">
@@ -59,7 +76,22 @@ export default function Profile() {
                                 <MDBCardText>Full Name</MDBCardText>
                               </MDBCol>
                               <MDBCol sm="9">
-                                <MDBCardText className="text-muted">Johnatan Smith</MDBCardText>
+                                {change ? (
+                                  <MDBInputGroup className="mb-3">
+                                    <input
+                                      className="form-control"
+                                      placeholder="Johnatan Smith"
+                                      type="text"
+                                      onChange={(e) =>
+                                        setUserName(e.target.value)
+                                      }
+                                    />
+                                  </MDBInputGroup>
+                                ) : (
+                                  <MDBCardText className="text-muted">
+                                    {username}
+                                  </MDBCardText>
+                                )}
                               </MDBCol>
                             </MDBRow>
                             <hr />
@@ -68,7 +100,18 @@ export default function Profile() {
                                 <MDBCardText>Password</MDBCardText>
                               </MDBCol>
                               <MDBCol sm="9">
-                                <MDBCardText className="text-muted">**</MDBCardText>
+                                {change ? (
+                                  <MDBInputGroup className="mb-3">
+                                    <input
+                                      className="form-control"
+                                      type="password"
+                                    />
+                                  </MDBInputGroup>
+                                ) : (
+                                  <MDBCardText className="text-muted">
+                                    **
+                                  </MDBCardText>
+                                )}
                               </MDBCol>
                             </MDBRow>
                             <hr />
@@ -77,7 +120,18 @@ export default function Profile() {
                                 <MDBCardText>Email</MDBCardText>
                               </MDBCol>
                               <MDBCol sm="9">
-                                <MDBCardText className="text-muted">example@example.com</MDBCardText>
+                                {change ? (
+                                  <MDBInputGroup className="mb-3">
+                                    <input
+                                      className="form-control"
+                                      type="email"
+                                    />
+                                  </MDBInputGroup>
+                                ) : (
+                                  <MDBCardText className="text-muted">
+                                    example@example.com
+                                  </MDBCardText>
+                                )}
                               </MDBCol>
                             </MDBRow>
                             <hr />
@@ -86,7 +140,18 @@ export default function Profile() {
                                 <MDBCardText>Phone</MDBCardText>
                               </MDBCol>
                               <MDBCol sm="9">
-                                <MDBCardText className="text-muted">(097) 234-5678</MDBCardText>
+                                {change ? (
+                                  <MDBInputGroup className="mb-3">
+                                    <input
+                                      className="form-control"
+                                      type="text"
+                                    />
+                                  </MDBInputGroup>
+                                ) : (
+                                  <MDBCardText className="text-muted">
+                                    (097) 234-5678
+                                  </MDBCardText>
+                                )}
                               </MDBCol>
                             </MDBRow>
                             <hr />
@@ -95,13 +160,37 @@ export default function Profile() {
                                 <MDBCardText>Address</MDBCardText>
                               </MDBCol>
                               <MDBCol sm="9">
-                                <MDBCardText className="text-muted">Bay Area, San Francisco, CA</MDBCardText>
+                                {change ? (
+                                  <MDBInputGroup className="mb-3">
+                                    <input
+                                      className="form-control"
+                                      type="text"
+                                    />
+                                  </MDBInputGroup>
+                                ) : (
+                                  <MDBCardText className="text-muted">
+                                    Bay Area, San Francisco, CA
+                                  </MDBCardText>
+                                )}
                               </MDBCol>
                             </MDBRow>
                           </MDBCardBody>
                         </MDBCard>
                       </MDBRow>
                     </MDBCardBody>
+                    {change && (
+                      <MDBContainer fluid className="button-container">
+                        <MDBBtn
+                          rounded
+                          className="col-5 border border-0"
+                          size="lg"
+                          style={{ backgroundColor: "#AA4A30" }}
+                          href="#"
+                        >
+                          Save
+                        </MDBBtn>
+                      </MDBContainer>
+                    )}
                   </MDBCol>
                 </MDBRow>
               </MDBCard>
@@ -112,16 +201,6 @@ export default function Profile() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
 
 /*export default function Profile() {
   const [data, setData] = useState([])

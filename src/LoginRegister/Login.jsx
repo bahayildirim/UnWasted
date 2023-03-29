@@ -10,8 +10,7 @@ import Logo from "./Assets/Logo.svg";
 export const Login = (props) => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  console.log("email: " + email + " pass: " + pass);
-  console.log("logine girildi");
+
   const handleSubmit = (e) => {
     /*Capture when user submit form*/
     /*Bu yapilmazsa sayfa reload atar state kaybolur*/
@@ -38,7 +37,7 @@ export const Login = (props) => {
       <div className="auth-form-container">
         <h2>SIGN IN</h2>
 
-        <form className="login-form" onSubmit={handleSubmit}>
+        <form className="login-form" onSubmit={handleSubmit} method="post">
           <label htmlFor="email"></label>
           <input
             value={email}

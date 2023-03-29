@@ -4,14 +4,18 @@ import React, {
 import Axios from "axios";
 import LogRegImage from "./Assets/LogRegImage.png";
 import Logo from "./Assets/Logo.svg";
+import { MDBRadio } from "mdb-react-ui-kit";
 
 /*Props parent send function/value to children (onClick icin kullandim)*/
 export const Register = (props) => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  const [confirm, setConfirm] = useState("");
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
+  const [type, setType] = useState("");
+  const [address, setAddress] = useState("");
+  const [donator, setDonator] = useState(false);
+
   const handleSubmit = (e) => {
     /*Capture when user submit form*/
     /*Bu yapilmazsa sayfa reload atar state kaybolur*/
@@ -26,9 +30,12 @@ export const Register = (props) => {
 
   const register = () => {
     Axios.post("http://localhost:8080/register", {
-      username: name,
       password: pass,
       email: email,
+      fullname: name,
+      phone_no: contact,
+      type: type,
+      address: address,
     }).then((response) => {
       console.log(response);
     });
@@ -45,6 +52,26 @@ export const Register = (props) => {
       <div className="auth-form-container">
         <h2>REGISTER</h2>
         <form className="register-form" onSubmit={handleSubmit}>
+          <div>
+            <MDBRadio
+              name="inlineRadio"
+              id="inlineRadio1"
+              value="Donator"
+              label="Donator"
+              onChange={(e) => setType(e.target.value)}
+              onClick={() => setDonator(true)}
+              inline
+            />
+            <MDBRadio
+              name="inlineRadio"
+              id="inlineRadio2"
+              value="Buyer"
+              label="Buyer"
+              onChange={(e) => setType(e.target.value)}
+              onClick={() => setDonator(false)}
+              inline
+            />
+          </div>
           <label htmlFor="email"></label>
           <input
             value={email}
@@ -58,11 +85,24 @@ export const Register = (props) => {
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            type="username"
-            placeholder="User name"
+            type="fullname"
+            placeholder={donator ? "Company Name" : "Full Name"}
             id="username"
             name="username"
           />
+          {donator && (
+            <>
+              <label htmlFor="Address"></label>
+              <input
+                value={contact}
+                onChange={(e) => setAddress(e.target.value)}
+                type="Address"
+                placeholder="Address"
+                id="Address"
+                name="Address"
+              />
+            </>
+          )}
           <label htmlFor="contactNumber"></label>
           <input
             value={contact}
@@ -81,33 +121,11 @@ export const Register = (props) => {
             id="password"
             name="password"
           />
-          <label htmlFor="confirm"></label>
-          <input
-            value={confirm}
-            onChange={(e) => setConfirm(e.target.value)}
-            type="password"
-            placeholder="Confirm password"
-            id="password"
-            name="password"
-          />
           <br></br>
           <button type="submit" onClick={register}>
             Register
           </button>
         </form>
-
-        <div className="DonatorCheckBox">
-          <input
-            type="checkbox"
-            id="box"
-            value={first}
-            onChange={() => handleChange("first")}
-            onClick={() => props.onFormSwitch("donator")}
-          />
-          <label className="label" for="box">
-            If you are a Donator, Click the box!
-          </label>
-        </div>
 
         <button
           className="link-btn"

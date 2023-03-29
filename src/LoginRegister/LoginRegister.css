@@ -89,27 +89,3 @@ button {
   height: 35%;
   width: 20%;
 }
-
-.label {
-  color: white;
-  font-size: large;
-}
-
-.DonatorCheckBox {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-  align-items: end;
-}
-
-/*
-  html, body {
-    height: 100%;
-    width: 100%;
-  }
-
-  html, body { 
-    font-size: 130px 'Source Sans Pro', sans-serif; 
-    min-width: 102px;  
-  }
-  */

@@ -9,21 +9,22 @@ app.use(cors());
 
 //Connect to the database or create one if it doesn't exist
 var db = new sqlite3.Database(
-  "./db/userInfo.db",
+  "./db/UnWasted.db",
   sqlite3.OPEN_READWRITE,
   (err) => {
-    if (err && err.code == "SQLITE_CANTOPEN") {
-      createUserDatabase();
+    if (err && err.code === "SQLITE_CANTOPEN") {
+      createDatabase();
     } else if (err) {
       console.error(err.message);
+    } else {
+      console.log("Connected to the user info database.");
     }
-    console.log("Connected to the user info database.");
   }
 );
 
 //Creates a new database if one doesn't exist
-function createUserDatabase() {
-  var newdb = new sqlite3.Database("./db/userInfo.db", (err) => {
+function createDatabase() {
+  var newdb = new sqlite3.Database("./db/UnWasted.db", (err) => {
     if (err) {
       console.log("Getting error " + err);
       // eslint-disable-next-line no-undef
@@ -36,29 +37,40 @@ function createUserDatabase() {
 //Creates the tables for the database
 function createTables(newdb) {
   newdb.exec(`CREATE TABLE users (
-    username TEXT NOT NULL,
+    Id INTEGER PRIMARY KEY AUTOINCREMENT
+    type TEXT NOT NULL,
+    fullname TEXT NOT NULL,
     password TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     phone_no INTEGER,
     address TEXT,
-    logo_filename TEXT
+    logo TEXT
   );`);
 }
 
 //Registers user to database
 app.post("/register", (req, res) => {
-  const username = req.body.username;
+  const fullname = req.body.fullname;
   const password = req.body.password;
   const email = req.body.email;
+  const phone_no = req.body.phone_no;
+  const address = req.body.address;
+  const logo = req.body.logo;
+  const type = req.body.type;
   db.run(
-    `INSERT INTO Users (username, password, email) VALUES ("${username}", "${password}", "${email}")`,
+    `INSERT INTO users (fullname, password, email, phone_no, address, logo, type) VALUES ("${fullname}", "${password}", "${email}", "${phone_no}", "${address}", "${logo}", "${type}")`,
     (err) => {
       if (err) {
         console.log(err.message);
       }
     }
   );
-  console.log("Account registered: " + username + " " + password + " " + email);
+  console.log(
+    "Account registered: " + fullname + " " + password + " " + email,
+    " ",
+    phone_no,
+    " "
+  );
   res.redirect("/login");
 });
 
@@ -83,7 +95,20 @@ app.post("/login", (req, res) => {
       }
     }
   );
-  res.redirect("/anasayfa");
+  res.status(200).redirect("/");
+});
+
+app.put("/profile", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  db.run(
+    `UPDATE Users SET email = ${email}, password = ${password} WHERE `,
+    (err) => {
+      if (err) {
+        console.log(err.message);
+      }
+    }
+  );
 });
 
 const PORT = process.env.PORT || 8080;
