@@ -21,7 +21,7 @@ import {
 } from "mdb-react-ui-kit";
 
 export default function Profile() {
-  const [change, setChange] = useState("flase");
+  const [change, setChange] = useState(false);
   const [username, setUserName] = useState("");
 
   function handleForm(state) {
