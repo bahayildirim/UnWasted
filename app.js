@@ -37,7 +37,7 @@ function createDatabase() {
 //Creates the tables for the database
 function createTables(newdb) {
   newdb.exec(`CREATE TABLE users (
-    Id INTEGER PRIMARY KEY AUTOINCREMENT
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     type TEXT NOT NULL,
     fullname TEXT NOT NULL,
     password TEXT NOT NULL,
@@ -71,7 +71,7 @@ app.post("/register", (req, res) => {
     phone_no,
     " "
   );
-  res.redirect("/login");
+  res.status(200).redirect("/login");
 });
 
 //Checks login information and either redirects to login page or to home page depending on a successful login
@@ -98,18 +98,52 @@ app.post("/login", (req, res) => {
   res.status(200).redirect("/");
 });
 
-app.put("/profile", (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  db.run(
-    `UPDATE Users SET email = ${email}, password = ${password} WHERE `,
-    (err) => {
+app.put("/profile/:id", (req, res) => {
+  var id = req.params.id
+  var email = req.body.email;
+  var password = req.body.password;
+  var fullname = req.body.fullname;
+  var phone_no = req.body.phone_no;
+  var address = req.body.address;
+  var logo = req.body.logo;
+  var type = req.body.type;
+  db.get(
+    `SELECT * FROM users WHERE id = "${id}"`, (err, row) => {
       if (err) {
+        console.log("Profile with given ID doesn't exist.");
         console.log(err.message);
+      } else {
+        email = updateValue(row.email, email);
+        password = updateValue(row.password, password);
+        fullname = updateValue(row.fullname, fullname);
+        phone_no = updateValue(row.phone_no, phone_no);
+        address = updateValue(row.address, address);
+        logo = updateValue(row.logo, logo);
+        type = updateValue(row.type, type);
       }
     }
   );
+  console.log(`"${email}" "${password}" "${fullname}" "${phone_no}" "${address}" "${logo}" "${type}"`)
+  db.run(
+    `UPDATE users SET email = "${email}", password = "${password}", fullname = "${fullname}", phone_no = "${phone_no}",
+    address = "${address}", logo = "${logo}", type = "${type}" WHERE id = "${id}"`, (err) => {
+      if (err) {
+        console.log("Couldn't update profile.");
+        console.log(err.message);
+      }
+    }
+  )
+  console.log("Profile updated successfully.");
+  res.status(200).redirect("/");
 });
+
+function updateValue(currentValue, newValue) {
+  if (newValue == "undefined" || newValue == null) {
+    return currentValue;
+  } else {
+    return newValue;
+  }
+}
 
 const PORT = process.env.PORT || 8080;
 
