@@ -35,7 +35,7 @@ export const Login = (props) => {
       <img className="LogRegImage" src={LogRegImage} alt="" />
 
       <div className="auth-form-container">
-        <h2>SIGN IN</h2>
+        <h1 className="h1-sign-in">SIGN IN</h1>
 
         <form className="login-form" onSubmit={handleSubmit} method="post">
           <label htmlFor="email"></label>
@@ -64,10 +64,10 @@ export const Login = (props) => {
 
         <button
           className="link-btn"
-          onClick={() => props.onFormSwitch("register")}
-        >
+          onClick={() => props.onFormSwitch("register")}>
           Don't have an account? Register here!
         </button>
+        
       </div>
     </div>
   );

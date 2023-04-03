@@ -50,18 +50,10 @@ export const Register = (props) => {
       <img className="LogRegImage" src={LogRegImage} alt="" />
 
       <div className="auth-form-container">
-        <h2>REGISTER</h2>
+        <h1 className="h1-register">REGISTER</h1>
         <form className="register-form" onSubmit={handleSubmit}>
           <div>
-            <MDBRadio
-              name="inlineRadio"
-              id="inlineRadio1"
-              value="Donator"
-              label="Donator"
-              onChange={(e) => setType(e.target.value)}
-              onClick={() => setDonator(true)}
-              inline
-            />
+
             <MDBRadio
               name="inlineRadio"
               id="inlineRadio2"
@@ -71,6 +63,16 @@ export const Register = (props) => {
               onClick={() => setDonator(false)}
               inline
             />
+            <MDBRadio
+              name="inlineRadio"
+              id="inlineRadio1"
+              value="Donator"
+              label="Donator"
+              onChange={(e) => setType(e.target.value)}
+              onClick={() => setDonator(true)}
+              inline
+            />
+            
           </div>
           <label htmlFor="email"></label>
           <input
@@ -129,10 +131,10 @@ export const Register = (props) => {
 
         <button
           className="link-btn"
-          onClick={() => props.onFormSwitch("login")}
-        >
+          onClick={() => props.onFormSwitch("login")}>
           Already have an account? Login here!
         </button>
+
       </div>
     </div>
   );

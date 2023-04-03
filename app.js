@@ -99,7 +99,7 @@ app.post("/login", (req, res) => {
 });
 
 app.put("/profile/:id", (req, res) => {
-  var id = req.params.id
+  var id = req.params.id;
   var email = req.body.email;
   var password = req.body.password;
   var fullname = req.body.fullname;
@@ -107,34 +107,35 @@ app.put("/profile/:id", (req, res) => {
   var address = req.body.address;
   var logo = req.body.logo;
   var type = req.body.type;
-  db.get(
-    `SELECT * FROM users WHERE id = "${id}"`, (err, row) => {
-      if (err) {
-        console.log("Profile with given ID doesn't exist.");
-        console.log(err.message);
-      } else {
-        email = updateValue(row.email, email);
-        password = updateValue(row.password, password);
-        fullname = updateValue(row.fullname, fullname);
-        phone_no = updateValue(row.phone_no, phone_no);
-        address = updateValue(row.address, address);
-        logo = updateValue(row.logo, logo);
-        type = updateValue(row.type, type);
-      }
+  db.get(`SELECT * FROM users WHERE id = "${id}"`, (err, row) => {
+    if (err) {
+      console.log("Profile with given ID doesn't exist.");
+      console.log(err.message);
+    } else {
+      email = updateValue(row.email, email);
+      password = updateValue(row.password, password);
+      fullname = updateValue(row.fullname, fullname);
+      phone_no = updateValue(row.phone_no, phone_no);
+      address = updateValue(row.address, address);
+      logo = updateValue(row.logo, logo);
+      type = updateValue(row.type, type);
     }
+  });
+  console.log(
+    `"${email}" "${password}" "${fullname}" "${phone_no}" "${address}" "${logo}" "${type}"`
   );
-  console.log(`"${email}" "${password}" "${fullname}" "${phone_no}" "${address}" "${logo}" "${type}"`)
   db.run(
     `UPDATE users SET email = "${email}", password = "${password}", fullname = "${fullname}", phone_no = "${phone_no}",
-    address = "${address}", logo = "${logo}", type = "${type}" WHERE id = "${id}"`, (err) => {
+    address = "${address}", logo = "${logo}", type = "${type}" WHERE id = "${id}"`,
+    (err) => {
       if (err) {
         console.log("Couldn't update profile.");
         console.log(err.message);
       }
     }
-  )
+  );
   console.log("Profile updated successfully.");
-  res.status(200).redirect("/");
+  res.send(app.get(`/profile/${id}`));
 });
 
 function updateValue(currentValue, newValue) {
@@ -144,6 +145,18 @@ function updateValue(currentValue, newValue) {
     return newValue;
   }
 }
+
+app.get("/profile/:id", (req, res) => {
+  var id = req.params.id;
+  var query = `SELECT * FROM users WHERE id = "${id}"`;
+  db.get(query, (err, row) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(row);
+    }
+  });
+});
 
 const PORT = process.env.PORT || 8080;
 

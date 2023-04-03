@@ -19,14 +19,47 @@ import {
   MDBInput,
   MDBInputGroup,
 } from "mdb-react-ui-kit";
+import Axios from "axios";
 
 export default function Profile() {
   const [change, setChange] = useState(false);
-  const [username, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setpassword] = useState("");
+  const [fullname, setfullname] = useState("");
+  const [phone_no, setPhone] = useState("");
+  const [address, setaddress] = useState("");
+  const [user, setUser] = useState({});
+  const [changedData, setChangedData] = useState({});
+
+  const id = 3;
 
   function handleForm(state) {
     setChange(!state);
   }
+
+  const handleFormChange = (event) => {
+    setChangedData({ ...changedData, [event.target.name]: event.target.value });
+  };
+
+  useEffect(() => {
+    Axios.get("http://localhost:8080/profile/" + id).then((response) => {
+      setUser(response.data);
+      setChangedData(response.data);
+    });
+  }, []);
+
+  const edit = (event) => {
+    Axios.put(`http://localhost:8080/profile/${user.id}`, changedData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      setUser(response.data);
+      setChangedData(response.data);
+    });
+    window.location.reload();
+    event.preventDefault();
+  };
 
   return (
     <div className="main">
@@ -52,7 +85,7 @@ export default function Profile() {
                       style={{ width: "80px" }}
                       fluid
                     />
-                    <MDBTypography tag="h5">Marie Horwitz</MDBTypography>
+                    <MDBTypography tag="h5">{user.fullname}</MDBTypography>
                     <MDBCardText>Donator/Buyer</MDBCardText>
                     <MDBBtn
                       className="ms-2"
@@ -77,19 +110,19 @@ export default function Profile() {
                               </MDBCol>
                               <MDBCol sm="9">
                                 {change ? (
-                                  <MDBInputGroup className="mb-3">
+                                  <div>
                                     <input
-                                      className="form-control"
-                                      placeholder="Johnatan Smith"
                                       type="text"
-                                      onChange={(e) =>
-                                        setUserName(e.target.value)
-                                      }
+                                      id="fullname"
+                                      class="form-control"
+                                      value={changedData.fullname || " "}
+                                      name="fullname"
+                                      onChange={handleFormChange}
                                     />
-                                  </MDBInputGroup>
+                                  </div>
                                 ) : (
                                   <MDBCardText className="text-muted">
-                                    {username}
+                                    {user.fullname}
                                   </MDBCardText>
                                 )}
                               </MDBCol>
@@ -105,11 +138,14 @@ export default function Profile() {
                                     <input
                                       className="form-control"
                                       type="password"
+                                      onChange={(e) =>
+                                        setpassword(e.target.value)
+                                      }
                                     />
                                   </MDBInputGroup>
                                 ) : (
                                   <MDBCardText className="text-muted">
-                                    **
+                                    {user.password}
                                   </MDBCardText>
                                 )}
                               </MDBCol>
@@ -125,11 +161,12 @@ export default function Profile() {
                                     <input
                                       className="form-control"
                                       type="email"
+                                      onChange={(e) => setEmail(e.target.value)}
                                     />
                                   </MDBInputGroup>
                                 ) : (
                                   <MDBCardText className="text-muted">
-                                    example@example.com
+                                    {user.email}
                                   </MDBCardText>
                                 )}
                               </MDBCol>
@@ -145,11 +182,12 @@ export default function Profile() {
                                     <input
                                       className="form-control"
                                       type="text"
+                                      onChange={(e) => setPhone(e.target.value)}
                                     />
                                   </MDBInputGroup>
                                 ) : (
                                   <MDBCardText className="text-muted">
-                                    (097) 234-5678
+                                    {user.phone_no}
                                   </MDBCardText>
                                 )}
                               </MDBCol>
@@ -165,11 +203,14 @@ export default function Profile() {
                                     <input
                                       className="form-control"
                                       type="text"
+                                      onChange={(e) =>
+                                        setaddress(e.target.value)
+                                      }
                                     />
                                   </MDBInputGroup>
                                 ) : (
                                   <MDBCardText className="text-muted">
-                                    Bay Area, San Francisco, CA
+                                    {user.address}
                                   </MDBCardText>
                                 )}
                               </MDBCol>
@@ -186,6 +227,7 @@ export default function Profile() {
                           size="lg"
                           style={{ backgroundColor: "#AA4A30" }}
                           href="#"
+                          onClick={edit}
                         >
                           Save
                         </MDBBtn>
