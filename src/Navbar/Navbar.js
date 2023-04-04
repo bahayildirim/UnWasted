@@ -9,7 +9,7 @@ import {
   Stack,
   Card,
 } from "react-bootstrap";
-
+import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import {
   MDBContainer,
@@ -34,7 +34,11 @@ import Logo from "../Navbar/Assets/Logo.svg";
 
 function NavScrollExample() {
   const [showBasic, setShowBasic] = useState(false);
-
+  let navigate = useNavigate(); 
+  const routeChange = () =>{ 
+    let path = `login`; 
+    navigate(path);
+  }
   return (
     <MDBNavbar expand="lg" light>
       <MDBContainer fluid>
@@ -53,27 +57,34 @@ function NavScrollExample() {
 
         <MDBCollapse navbar show={showBasic}>
           <MDBNavbarNav className="mr-auto mb-2 mb-lg-0">
+          <MDBNavbarBrand>
             <MDBNavbarItem>
               <MDBNavbarLink active aria-current="page" href="#">
                 Home
               </MDBNavbarLink>
             </MDBNavbarItem>
+            </MDBNavbarBrand>
+            <MDBNavbarBrand>
             <MDBNavbarItem>
               <MDBNavbarLink active aria-current="page" href="#">
                 Packages
               </MDBNavbarLink>
             </MDBNavbarItem>
+            </MDBNavbarBrand>
+            <MDBNavbarBrand>
             <MDBNavbarItem>
               <MDBNavbarLink active aria-current="page" href="#">
                 Review
               </MDBNavbarLink>
             </MDBNavbarItem>
+            </MDBNavbarBrand>
+            <MDBNavbarBrand>
             <MDBNavbarItem>
               <MDBNavbarLink active aria-current="page" href="#">
                 About Us
               </MDBNavbarLink>
             </MDBNavbarItem>
-
+            </MDBNavbarBrand>
           </MDBNavbarNav>
 
           <form className="d-flex input-group w-auto">
@@ -83,15 +94,13 @@ function NavScrollExample() {
               placeholder="Search"
               aria-label="Search"
             />
-            <MDBBtn color="#EDCFA9"><i class="fas fa-search"></i></MDBBtn>
+            <MDBBtn color="#EDCFA9" className="button"><i class="fas fa-search"></i></MDBBtn>
           </form>
           <form className="d-flex input-group w-auto">
-          <MDBBtn outline color="#EDCFA9" size="sm" type='button'>
+          <MDBBtn outline color= '#EDCFA9' className="button" size="ml" type='button' onClick={routeChange} >
           SignOut
         </MDBBtn>
-        
           </form>
-         
         </MDBCollapse>
       </MDBContainer>
     </MDBNavbar>

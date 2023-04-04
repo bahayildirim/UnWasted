@@ -65,7 +65,7 @@ export default function Profile() {
     <div className="main">
       <section className="vh-100" style={{ backgroundImage: { ArkaPlan } }}>
         <Navbar />
-        <MDBContainer className="py-10 h-100">
+        <MDBContainer className="py-10 h-100" fluid>
           <MDBRow className="justify-content-center align-items-center h-100">
             <MDBCol lg="6" className="mb-4 mb-lg-0">
               <MDBCard className="mb-3" style={{ borderRadius: ".5rem" }}>
