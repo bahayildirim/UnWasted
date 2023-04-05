@@ -134,15 +134,16 @@ export default function Profile() {
                               </MDBCol>
                               <MDBCol sm="9">
                                 {change ? (
-                                  <MDBInputGroup className="mb-3">
+                                  <div>
                                     <input
-                                      className="form-control"
-                                      type="password"
-                                      onChange={(e) =>
-                                        setpassword(e.target.value)
-                                      }
+                                      type="text"
+                                      id="password"
+                                      class="form-control"
+                                      value={changedData.password || " "}
+                                      name="password"
+                                      onChange={handleFormChange}
                                     />
-                                  </MDBInputGroup>
+                                  </div>
                                 ) : (
                                   <MDBCardText className="text-muted">
                                     {user.password}
@@ -157,13 +158,16 @@ export default function Profile() {
                               </MDBCol>
                               <MDBCol sm="9">
                                 {change ? (
-                                  <MDBInputGroup className="mb-3">
+                                  <div>
                                     <input
-                                      className="form-control"
                                       type="email"
-                                      onChange={(e) => setEmail(e.target.value)}
+                                      id="email"
+                                      class="form-control"
+                                      value={changedData.email || " "}
+                                      name="email"
+                                      onChange={handleFormChange}
                                     />
-                                  </MDBInputGroup>
+                                  </div>
                                 ) : (
                                   <MDBCardText className="text-muted">
                                     {user.email}
@@ -178,13 +182,16 @@ export default function Profile() {
                               </MDBCol>
                               <MDBCol sm="9">
                                 {change ? (
-                                  <MDBInputGroup className="mb-3">
+                                  <div>
                                     <input
-                                      className="form-control"
                                       type="text"
-                                      onChange={(e) => setPhone(e.target.value)}
+                                      id="phone_no"
+                                      class="form-control"
+                                      value={changedData.phone_no || " "}
+                                      name="phone_no"
+                                      onChange={handleFormChange}
                                     />
-                                  </MDBInputGroup>
+                                  </div>
                                 ) : (
                                   <MDBCardText className="text-muted">
                                     {user.phone_no}
@@ -199,15 +206,16 @@ export default function Profile() {
                               </MDBCol>
                               <MDBCol sm="9">
                                 {change ? (
-                                  <MDBInputGroup className="mb-3">
+                                  <div>
                                     <input
-                                      className="form-control"
                                       type="text"
-                                      onChange={(e) =>
-                                        setaddress(e.target.value)
-                                      }
+                                      id="address"
+                                      class="form-control"
+                                      value={changedData.address || " "}
+                                      name="address"
+                                      onChange={handleFormChange}
                                     />
-                                  </MDBInputGroup>
+                                  </div>
                                 ) : (
                                   <MDBCardText className="text-muted">
                                     {user.address}
