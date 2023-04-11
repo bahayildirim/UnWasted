@@ -30,8 +30,15 @@ export default function Profile() {
   const [address, setaddress] = useState("");
   const [user, setUser] = useState({});
   const [changedData, setChangedData] = useState({});
+  const [userid, setuserid] = useState();
 
   const id = 3;
+
+  useEffect(() => {
+    Axios.get("http://localhost:8080/getcookie").then((response) => {
+      setuserid(response.data);
+    });
+  }, [setuserid]);
 
   function handleForm(state) {
     setChange(!state);
@@ -41,15 +48,17 @@ export default function Profile() {
     setChangedData({ ...changedData, [event.target.name]: event.target.value });
   };
 
+  var b = parseInt(userid);
+  console.log(b);
   useEffect(() => {
-    Axios.get("http://localhost:8080/profile/" + id).then((response) => {
+    Axios.get("http://localhost:8080/profile/" + b).then((response) => {
       setUser(response.data);
       setChangedData(response.data);
     });
   }, []);
 
   const edit = (event) => {
-    Axios.put(`http://localhost:8080/profile/${user.id}`, changedData, {
+    Axios.put(`http://localhost:8080/profile/${userid}`, changedData, {
       headers: {
         "Content-Type": "application/json",
       },

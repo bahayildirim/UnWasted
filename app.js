@@ -3,6 +3,14 @@ const app = express();
 const sqlite3 = require("sqlite3");
 const cors = require("cors");
 
+//for session and its storage
+const session = require("express-session");
+const sqlite = require("better-sqlite3");
+
+const SqliteStore = require("better-sqlite3-session-store")(session);
+
+const sessiondb = new sqlite("sessions.db", { verbose: console.log });
+
 app.use(express.json()); // Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
 app.use(cors());
@@ -48,6 +56,22 @@ function createTables(newdb) {
   );`);
 }
 
+app.use(
+  session({
+    store: new SqliteStore({
+      client: sessiondb,
+      expired: {
+        clear: true,
+        intervalMs: 86400000, //ms = 15min
+      },
+    }),
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: true },
+  })
+);
+
 //Registers user to database
 app.post("/register", (req, res) => {
   const fullname = req.body.fullname;
@@ -87,6 +111,7 @@ app.post("/login", (req, res) => {
         try {
           if (row.email != null && row.password != null) {
             console.log("Login successful: " + row.email + " " + row.password);
+            req.session.data.userid = row.id;
           }
         } catch (err) {
           console.log("Login failed, mail or password is wrong.");
@@ -96,6 +121,11 @@ app.post("/login", (req, res) => {
     }
   );
   res.status(200).redirect("/");
+});
+
+app.get("/getcookie", (req, res) => {
+  console.log("userid: " + req.session.userid);
+  res.status(200).send(req.session.userid);
 });
 
 app.put("/profile/:id", (req, res) => {
