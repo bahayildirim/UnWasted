@@ -6,6 +6,7 @@ const cors = require("cors");
 //for session and its storage
 const session = require("express-session");
 const sqlite = require("better-sqlite3");
+const cookieParser = require("cookie-parser");
 
 const SqliteStore = require("better-sqlite3-session-store")(session);
 
@@ -14,6 +15,7 @@ const sessiondb = new sqlite("sessions.db", { verbose: console.log });
 app.use(express.json()); // Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
 app.use(cors());
+app.use(cookieParser()) // Allows server to read, save and access cookies
 
 //Connect to the database or create one if it doesn't exist
 var db = new sqlite3.Database(
@@ -66,9 +68,9 @@ app.use(
       },
     }),
     secret: "keyboard cat",
-    resave: false,
+    resave: true,
     saveUninitialized: false,
-    cookie: { secure: true },
+    cookie: { secure: false },
   })
 );
 
@@ -111,7 +113,10 @@ app.post("/login", (req, res) => {
         try {
           if (row.email != null && row.password != null) {
             console.log("Login successful: " + row.email + " " + row.password);
-            req.session.data.userid = row.id;
+            req.session.userid = row.id;
+            console.log(req.session.userid);
+            console.log(req.session)
+            req.session.save();
           }
         } catch (err) {
           console.log("Login failed, mail or password is wrong.");
@@ -125,7 +130,7 @@ app.post("/login", (req, res) => {
 
 app.get("/getcookie", (req, res) => {
   console.log("userid: " + req.session.userid);
-  res.status(200).send(req.session.userid);
+  res.status(200).send(req.session.userid.toString());
 });
 
 app.put("/profile/:id", (req, res) => {
