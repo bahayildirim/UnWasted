@@ -65,6 +65,25 @@ function createTables(newdb) {
   );`);
 }
 
+db.run(
+  `CREATE TABLE IF NOT EXISTS products (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  product_name TEXT NOT NULL,
+  price REAL NOT NULL,
+  expiration_date DATETIME NOT NULL,
+  date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(user_id) REFERENCES users(id)
+);`,
+  function (err) {
+    if (err) {
+      console.log("Error creating orders table:", err);
+    } else {
+      console.log("Products table created successfully");
+    }
+  }
+);
+
 app.use(
   session({
     store: new SqliteStore({
@@ -210,6 +229,26 @@ app.get("/profile/:id", (req, res) => {
       res.send(row);
     }
   });
+});
+
+app.post("/addproduct", (req, res) => {
+  const productname = req.body.productname;
+  const price = req.body.price;
+  const expirationdate = req.body.expirationdate;
+  const userid = req.session.userid;
+  console.log("userid: " + userid);
+  db.run(
+    `INSERT INTO products (user_id, product_name, price, expiration_date) VALUES (?, ?, ?, ?)`,
+    [userid, productname, price, expirationdate],
+    (err) => {
+      if (err) {
+        console.log(err.message);
+        res.status(500).send("Product could not be added.");
+      } else {
+        res.status(200).send("Product added successfully.");
+      }
+    }
+  );
 });
 
 const PORT = process.env.PORT || 8080;
