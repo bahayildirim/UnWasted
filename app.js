@@ -73,6 +73,7 @@ db.run(
   price REAL NOT NULL,
   expiration_date DATETIME NOT NULL,
   date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  stock INTEGER NOT NULL,
   FOREIGN KEY(user_id) REFERENCES users(id)
 );`,
   function (err) {
@@ -235,11 +236,12 @@ app.post("/addproduct", (req, res) => {
   const productname = req.body.productname;
   const price = req.body.price;
   const expirationdate = req.body.expirationdate;
+  const stock = req.body.stock;
   const userid = req.session.userid;
   console.log("userid: " + userid);
   db.run(
-    `INSERT INTO products (user_id, product_name, price, expiration_date) VALUES (?, ?, ?, ?)`,
-    [userid, productname, price, expirationdate],
+    `INSERT INTO products (user_id, product_name, price, expiration_date, stock) VALUES (?, ?, ?, ?, ?)`,
+    [userid, productname, price, expirationdate, stock],
     (err) => {
       if (err) {
         console.log(err.message);
