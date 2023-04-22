@@ -34,11 +34,36 @@ export default function Profile() {
 
   const id = 3;
 
+  // useEffect(() => {
+  //   try {
+  //     Axios.get("http://localhost:8080/getcookie", {
+  //       withCredentials: true,
+  //     }).then((response) => {
+  //       setuserid(response.data);
+  //       console.log("gelen değer: " + response.data);
+  //     });
+  //   } catch {
+  //     console.log("axios hatası:" + console.error());
+  //   }
+  // }, []);
+
   useEffect(() => {
-    Axios.get("http://localhost:8080/getcookie").then((response) => {
+    async function getcookie() {
+      let response = await Axios.get("http://localhost:8080/getcookie", {
+        withCredentials: true,
+      });
       setuserid(response.data);
-    });
-  }, [setuserid]);
+    }
+    getcookie();
+  }, []);
+
+  Axios.get("http://localhost:8080/getcookie", { withCredentials: true }).then(
+    (response) => {
+      console.log("gelen değer: " + response.data);
+    }
+  );
+
+  console.log("userid DEĞERi: " + userid);
 
   function handleForm(state) {
     setChange(!state);
@@ -48,14 +73,12 @@ export default function Profile() {
     setChangedData({ ...changedData, [event.target.name]: event.target.value });
   };
 
-  var b = parseInt(userid);
-  console.log(b);
   useEffect(() => {
-    Axios.get("http://localhost:8080/profile/" + b).then((response) => {
+    Axios.get("http://localhost:8080/profile/" + userid).then((response) => {
       setUser(response.data);
       setChangedData(response.data);
     });
-  }, []);
+  }, [userid]);
 
   const edit = (event) => {
     Axios.put(`http://localhost:8080/profile/${userid}`, changedData, {

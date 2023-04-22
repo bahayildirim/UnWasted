@@ -31,14 +31,16 @@ import {
 import "./Navbar.style.css";
 
 import Logo from "../Navbar/Assets/Logo.svg";
+import Axios from "axios";
 
 function NavScrollExample() {
   const [showBasic, setShowBasic] = useState(false);
-  let navigate = useNavigate(); 
-  const routeChange = () =>{ 
-    let path = `login`; 
+  let navigate = useNavigate();
+  const routeChange = () => {
+    Axios.get("http://localhost:8080/logout", { withCredentials: true });
+    let path = `login`;
     navigate(path);
-  }
+  };
   return (
     <MDBNavbar expand="lg" light>
       <MDBContainer fluid>
@@ -57,33 +59,33 @@ function NavScrollExample() {
 
         <MDBCollapse navbar show={showBasic}>
           <MDBNavbarNav className="mr-auto mb-2 mb-lg-0">
-          <MDBNavbarBrand>
-            <MDBNavbarItem>
-              <MDBNavbarLink active aria-current="page" href="#">
-                Home
-              </MDBNavbarLink>
-            </MDBNavbarItem>
+            <MDBNavbarBrand>
+              <MDBNavbarItem>
+                <MDBNavbarLink active aria-current="page" href="#">
+                  Home
+                </MDBNavbarLink>
+              </MDBNavbarItem>
             </MDBNavbarBrand>
             <MDBNavbarBrand>
-            <MDBNavbarItem>
-              <MDBNavbarLink active aria-current="page" href="#">
-                Packages
-              </MDBNavbarLink>
-            </MDBNavbarItem>
+              <MDBNavbarItem>
+                <MDBNavbarLink active aria-current="page" href="#">
+                  Packages
+                </MDBNavbarLink>
+              </MDBNavbarItem>
             </MDBNavbarBrand>
             <MDBNavbarBrand>
-            <MDBNavbarItem>
-              <MDBNavbarLink active aria-current="page" href="#">
-                Review
-              </MDBNavbarLink>
-            </MDBNavbarItem>
+              <MDBNavbarItem>
+                <MDBNavbarLink active aria-current="page" href="#">
+                  Review
+                </MDBNavbarLink>
+              </MDBNavbarItem>
             </MDBNavbarBrand>
             <MDBNavbarBrand>
-            <MDBNavbarItem>
-              <MDBNavbarLink active aria-current="page" href="#">
-                About Us
-              </MDBNavbarLink>
-            </MDBNavbarItem>
+              <MDBNavbarItem>
+                <MDBNavbarLink active aria-current="page" href="#">
+                  About Us
+                </MDBNavbarLink>
+              </MDBNavbarItem>
             </MDBNavbarBrand>
           </MDBNavbarNav>
 
@@ -94,12 +96,21 @@ function NavScrollExample() {
               placeholder="Search"
               aria-label="Search"
             />
-            <MDBBtn color="#EDCFA9" className="button"><i class="fas fa-search"></i></MDBBtn>
+            <MDBBtn color="#EDCFA9" className="button">
+              <i class="fas fa-search"></i>
+            </MDBBtn>
           </form>
           <form className="d-flex input-group w-auto">
-          <MDBBtn outline color= '#EDCFA9' className="button" size="ml" type='button' onClick={routeChange} >
-          SignOut
-        </MDBBtn>
+            <MDBBtn
+              outline
+              color="#EDCFA9"
+              className="button"
+              size="ml"
+              type="button"
+              onClick={routeChange}
+            >
+              SignOut
+            </MDBBtn>
           </form>
         </MDBCollapse>
       </MDBContainer>

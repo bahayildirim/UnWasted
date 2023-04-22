@@ -18,10 +18,14 @@ export const Login = (props) => {
   };
 
   const login = () => {
-    Axios.post("http://localhost:8080/login", {
-      email: email,
-      password: pass,
-    }).then((response) => {
+    Axios.post(
+      "http://localhost:8080/login",
+      {
+        email: email,
+        password: pass,
+      },
+      { withCredentials: true }
+    ).then((response) => {
       console.log(response);
     });
   };
@@ -64,10 +68,10 @@ export const Login = (props) => {
 
         <button
           className="link-btn"
-          onClick={() => props.onFormSwitch("register")}>
+          onClick={() => props.onFormSwitch("register")}
+        >
           Don't have an account? Register here!
         </button>
-        
       </div>
     </div>
   );

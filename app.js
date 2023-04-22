@@ -14,8 +14,15 @@ const sessiondb = new sqlite("sessions.db", { verbose: console.log });
 
 app.use(express.json()); // Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
-app.use(cors());
-app.use(cookieParser()) // Allows server to read, save and access cookies
+
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+app.use(cookieParser()); // Allows server to read, save and access cookies
 
 //Connect to the database or create one if it doesn't exist
 var db = new sqlite3.Database(
@@ -68,9 +75,10 @@ app.use(
       },
     }),
     secret: "keyboard cat",
-    resave: true,
+    resave: false,
     saveUninitialized: false,
-    cookie: { secure: false },
+    cookie: { secure: false, maxAge: 86400000 },
+    unset: "destroy",
   })
 );
 
@@ -115,8 +123,9 @@ app.post("/login", (req, res) => {
             console.log("Login successful: " + row.email + " " + row.password);
             req.session.userid = row.id;
             console.log(req.session.userid);
-            console.log(req.session)
+            console.log(req.session);
             req.session.save();
+            res.status(200).redirect("/");
           }
         } catch (err) {
           console.log("Login failed, mail or password is wrong.");
@@ -125,11 +134,21 @@ app.post("/login", (req, res) => {
       }
     }
   );
-  res.status(200).redirect("/");
+});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.log(err);
+      res.send(false);
+    }
+    res.clearCookie();
+    return res.send(true);
+  });
 });
 
 app.get("/getcookie", (req, res) => {
-  console.log("userid: " + req.session.userid);
+  console.log("getcook userid: " + req.session.userid);
   res.status(200).send(req.session.userid.toString());
 });
 
