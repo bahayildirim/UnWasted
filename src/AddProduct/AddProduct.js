@@ -1,5 +1,7 @@
 import { useState } from "react";
 import Axios from "axios";
+import Navbar from "../AddProduct/Navbar/Navbar.js";
+import "bootstrap/dist/css/bootstrap.css";
 
 function App() {
   const [check, setCheck] = useState(false);
@@ -25,8 +27,10 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <form>
+    
+    <div>
+      <Navbar/>
+     <form>
         <div class="form-outline mb-4">
           <input
             type="text"
