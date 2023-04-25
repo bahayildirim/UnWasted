@@ -1,0 +1,205 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.productContainer {
+  display: flex;
+  margin-left: 1.6%;
+  height: 777px;
+  /* Urunlerin konumu, "margin-left: 30px;" */
+}
+
+.productContainer .productBoxs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 30%;
+
+  overflow-y: scroll;
+  /* Width 50% yaparsan 3'lü sira olur, 30% yaparsan 2'li sira olur, 20% yaparsan tek sira olur*/
+  /* Urunlerin dizilisi */
+}
+
+.productContainer .productBoxs .product {
+  border: 1px solid #e89f71;
+  border-radius: 5px;
+  border-width: 1px;
+  background-color: white;
+  box-shadow: 0px 0px 5px #d57149;
+  margin-right: 30px;
+  margin-top: 20px;
+  margin-bottom: 100px;
+  padding: 7px;
+  height: 94%; /* Artirinca birbirine geciyor
+ 
+  /* Urunlerin konumu - Border burda */
+}
+
+.productContainer .productBoxs .product img {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 30%;
+  margin-top: 1%;
+
+  /* Urunlerin konumu */
+}
+
+.productContainer .productBoxs .product .productsInfo {
+  text-align: center;
+  background-color: #d57149;
+  width: 200px;
+  height: 32%; /* aciklama kismi*/
+  position: relative;
+  margin-top: -63px;
+  border-radius: 0px 0px 5px 5px;
+
+  /* Urun ismi yazan yer */
+}
+
+.productContainer .productBoxs .product .productsInfo p {
+  font-weight: bold;
+  color: white;
+  margin-top: 1%;
+
+  /* Urun ismi Burger Baklava falan yazan yer */
+}
+
+.productContainer .productBoxs .product .productsInfo p:nth-child(1) {
+  font-size: 20px;
+  position: absolute;
+  margin-left: 30%;
+  margin-top: 1%;
+
+  /* Urun ismi Burger Baklava falan yazan yer */
+}
+
+.productContainer .productBoxs .product .productsInfo p:nth-child(2) {
+  font-size: 13px;
+  position: absolute;
+  margin-top: 16%;
+
+  /* Urun ismi altindaki aciklama kismi */
+}
+
+.productContainer .productBoxs .product .countProduct {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* + - buton konumu */
+}
+
+.productContainer .productBoxs .product .countProduct b {
+  margin: 5%;
+  color: black;
+
+  /* butonlar arasi mesafe ve sayi rengi */
+}
+
+.productContainer .productBoxs .product .countProduct button {
+  cursor: pointer;
+  background-color: white;
+  border: 1px solid white;
+  box-shadow: 0px 0px 5px 1px #d57149;
+  border-radius: 20%;
+  font-size: 125%;
+  color: black;
+
+  /* + - butonlari */
+}
+
+.header {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  background-color: #d57149;
+  height: 60px;
+  border-radius: 0px 0px 5px 5px;
+  color: white;
+  font-size: 250%;
+
+  /* Prada kismi */
+}
+
+.mainBasket {
+  border-radius: 10px;
+  position: fixed;
+  right: 3%;
+  top: 8.5%;
+  height: 80%;
+  padding-top: 0px;
+
+  /* Basket head kismi */
+}
+
+.mainBasket .showBasket {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 300px;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to right, #d57149, #d57149);
+  border-radius: 10px;
+  padding: 0px 10px 0px 10px;
+  color: #fff;
+  float: right;
+
+  /* Basket body kismi */
+}
+
+.deleteOne {
+  margin-left: 10%;
+  height: 35px;
+  width: 100px;
+  border-radius: 20%;
+  font-size: 5px;
+}
+
+.deleteOneFontSize {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.mainBasket .showBasket h2 {
+  width: 600px;
+  text-align: center;
+}
+
+.mainBasket .showBasket .basketList {
+  display: flex;
+  flex-direction: row;
+}
+
+.mainBasket .showBasket .basketList p {
+  display: block;
+  width: 80px;
+}
+
+.mainBasket .showBasket .basketList img {
+  box-shadow: 0px 0px 5px white;
+  margin-right: 30px;
+  margin-bottom: 30px;
+  border-radius: 5px;
+}
+
+/*
+
+  overflow-y: scroll;
+  
+  Icindekiler'e overflow-y: scroll; ekleyerek icindekiler kismi uzatilabilir 
+
+  overflow-x: hidden;
+  overflow-y: scroll;
+*/
