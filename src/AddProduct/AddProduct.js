@@ -17,7 +17,7 @@ function App() {
       price: itemPrice,
       stock: stock,
       expirationdate: time,
-      description: describe,
+      information: describe,
     }).then((response) => {
       console.log(response);
     });
@@ -27,10 +27,9 @@ function App() {
   };
 
   return (
-    
     <div>
-      <Navbar/>
-     <form>
+      <Navbar />
+      <form>
         <div class="form-outline mb-4">
           <input
             type="text"
