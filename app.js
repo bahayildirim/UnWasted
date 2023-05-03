@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 
 const SqliteStore = require("better-sqlite3-session-store")(session);
 
-const sessiondb = new sqlite("sessions.db", { verbose: console.log });
+const sessiondb = new sqlite("sessions.db");
 
 app.use(express.json()); // Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
@@ -79,9 +79,26 @@ db.run(
 );`,
   function (err) {
     if (err) {
-      console.log("Error creating orders table:", err);
+      console.log("Error creating products table:", err);
     } else {
       console.log("Products table created successfully");
+    }
+  }
+)
+db.run(
+  `CREATE TABLE IF NOT EXISTS orders (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  product_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  date_ordered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(product_id) REFERENCES products(id),
+  FOREIGN KEY(user_id) REFERENCES users(id)
+);`,
+  function (err) {
+    if (err) {
+      console.log("Error creating orders table:", err);
+    } else {
+      console.log("Orders table created successfully");
     }
   }
 );
@@ -224,7 +241,7 @@ function updateValue(currentValue, newValue) {
 app.get("/profile/:id", (req, res) => {
   var id = req.params.id;
   var query = `SELECT * FROM users WHERE id = "${id}"`;
-  db.get(query, (err, row) => {
+  db.run(query, (err) => {
     if (err) {
       console.log(err);
     } else {
@@ -239,6 +256,7 @@ app.post("/addproduct", (req, res) => {
   const expirationdate = req.body.expirationdate;
   const stock = req.body.stock;
   const information = req.body.information;
+  //Automatically add donator's id to the database
   const userid = req.session.userid;
   console.log("userid: " + userid);
   db.run(
@@ -250,6 +268,98 @@ app.post("/addproduct", (req, res) => {
         res.status(500).send("Product could not be added.");
       } else {
         res.status(200).send("Product added successfully.");
+      }
+    }
+  );
+});
+
+//Displays all products in stock
+app.get("/products", (req, res) => {
+  var query = `SELECT * FROM products WHERE stock > 0`;
+  db.all(query, (err, rows) => {
+    if (err) {
+      console.log(err);
+    } 
+    else {
+      console.log(rows);
+      /*
+      rows.forEach((row) => {
+        console.log(row);
+      });
+      */
+      res.send(rows);
+    }
+  });
+});
+
+//Displays all orders of the user
+app.get("/orders", (req, res) => {
+  const userid = req.session.userid;
+  var query = `SELECT * FROM orders WHERE user_id = "${userid}"`;
+  db.all(query, (err, rows) => {
+    if (err) {
+      console.log(err);
+    } 
+    else {
+      console.log(rows);
+      /*
+      rows.forEach((row) => {
+        console.log(row);
+      });
+      */
+      res.send(rows);
+    }
+  });
+});
+
+app.post("/addorder", (req, res) => {
+  const productid = req.body.productid;
+  //Automatically add user's id to the database
+  const userid = req.session.userid;
+  console.log("userid: " + userid);
+  console.log("productid: " + productid);
+  db.run(
+    `INSERT INTO orders (user_id, product_id) VALUES (?, ?)`,
+    [userid, productid], (err) => {
+      if (err) {
+        console.log(err.message);
+        res.status(500).send("Order could not be added.");
+      } else {
+        //Reduce stock by 1 if order is successful
+        var query = `UPDATE products SET stock = stock - 1 WHERE id = "${productid}" AND stock > 0`
+        db.run(query, (err) => {
+          if (err) {
+            console.log("Error while decreasing stock:");
+            console.log(err.message);
+          } 
+        })
+        res.status(200).send("Order added successfully.");
+      }
+    }
+  );
+});
+
+app.post("/deleteorder", (req, res) => {
+  const productid = req.body.productid;
+  //Automatically add user's id to the database
+  const userid = req.session.userid;
+  console.log("userid: " + userid);
+  console.log("productid: " + productid);
+  db.run(
+    `DELETE FROM orders WHERE user_id = "${userid}" AND product_id = "${productid}"`, (err) => {
+      if (err) {
+        console.log(err.message);
+        res.status(500).send("Order could not be deleted.");
+      } else {
+        //Increase stock by 1 if order is deleted
+        var query = `UPDATE products SET stock = stock + 1 WHERE id = "${productid}"`
+        db.run(query, (err) => {
+          if (err) {
+            console.log("Error while increasing stock:");
+            console.log(err.message);
+          } 
+        })
+        res.status(200).send("Order deleted successfully.");
       }
     }
   );
