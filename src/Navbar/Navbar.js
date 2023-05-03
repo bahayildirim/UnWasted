@@ -31,15 +31,29 @@ import {
 import "./Navbar.style.css";
 
 import Logo from "../Navbar/Assets/Logo.svg";
-import Axios from "axios";
 
-function NavScrollExample() {
+function NavScrollExample(props) {
   const [showBasic, setShowBasic] = useState(false);
-  let navigate = useNavigate();
-  const routeChange = () => {
-    Axios.get("http://localhost:8080/logout", { withCredentials: true });
-    let path = `login`;
+  let navigate = useNavigate(); 
+  const routeChange = () =>{ 
+    let path = `login`; 
     navigate(path);
+  }
+
+  const toggleStyle = {
+    backgroundColor: '#E89F71',
+    color: '#AA4A30',
+    border: 'none',
+    fontSize: '1.2rem',
+  };
+
+  const menuStyle = {
+    backgroundColor: '#E89F71',
+    color: 'white',
+    width: '200px',
+    borderRadius: '10px',
+    fontSize: '1.2rem',
+    padding: '10px',
   };
   return (
     <MDBNavbar expand="lg" light>
@@ -59,59 +73,44 @@ function NavScrollExample() {
 
         <MDBCollapse navbar show={showBasic}>
           <MDBNavbarNav className="mr-auto mb-2 mb-lg-0">
-            <MDBNavbarBrand>
-              <MDBNavbarItem>
-                <MDBNavbarLink active aria-current="page" href="#">
-                  Home
-                </MDBNavbarLink>
-              </MDBNavbarItem>
+          <MDBNavbarBrand>
+            <MDBNavbarItem>
+              <MDBNavbarLink active aria-current="page" href="#">
+                Home
+              </MDBNavbarLink>
+            </MDBNavbarItem>
             </MDBNavbarBrand>
             <MDBNavbarBrand>
-              <MDBNavbarItem>
-                <MDBNavbarLink active aria-current="page" href="#">
-                  Packages
-                </MDBNavbarLink>
-              </MDBNavbarItem>
+            <MDBNavbarItem>
+              <MDBNavbarLink active aria-current="page" href="#">
+                Packages
+              </MDBNavbarLink>
+            </MDBNavbarItem>
             </MDBNavbarBrand>
             <MDBNavbarBrand>
-              <MDBNavbarItem>
-                <MDBNavbarLink active aria-current="page" href="#">
-                  Review
-                </MDBNavbarLink>
-              </MDBNavbarItem>
+            <MDBNavbarItem>
+              <MDBNavbarLink active aria-current="page" href="#">
+                Review
+              </MDBNavbarLink>
+            </MDBNavbarItem>
             </MDBNavbarBrand>
             <MDBNavbarBrand>
-              <MDBNavbarItem>
-                <MDBNavbarLink active aria-current="page" href="#">
-                  About Us
-                </MDBNavbarLink>
-              </MDBNavbarItem>
+            <MDBNavbarItem>
+              <MDBNavbarLink active aria-current="page" href="#">
+                About Us
+              </MDBNavbarLink>
+            </MDBNavbarItem>
             </MDBNavbarBrand>
           </MDBNavbarNav>
 
-          <form className="d-flex input-group w-auto">
-            <input
-              type="search"
-              className="form-control"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <MDBBtn color="#EDCFA9" className="button">
-              <i class="fas fa-search"></i>
-            </MDBBtn>
-          </form>
-          <form className="d-flex input-group w-auto">
-            <MDBBtn
-              outline
-              color="#EDCFA9"
-              className="button"
-              size="ml"
-              type="button"
-              onClick={routeChange}
-            >
-              SignOut
-            </MDBBtn>
-          </form>
+          <MDBDropdown group className='shadow-0'>
+        <MDBDropdownToggle style={toggleStyle}><MDBIcon fas icon="user-ninja" /> Donerci</MDBDropdownToggle>
+        <MDBDropdownMenu style={menuStyle}>
+          <MDBDropdownItem link href="/">Profile</MDBDropdownItem>
+          <MDBDropdownItem link>Orders</MDBDropdownItem>
+          <MDBDropdownItem link href="/login">LogOut</MDBDropdownItem>
+        </MDBDropdownMenu>
+      </MDBDropdown>
         </MDBCollapse>
       </MDBContainer>
     </MDBNavbar>

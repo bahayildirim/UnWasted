@@ -1,14 +1,16 @@
 import Product from "./Product";
 import "./index.css";
-import products from "./products.json";
 import { useEffect, useState } from "react";
+import Axios from "axios";
 
 function App() {
-  const [prod, setProduct] = useState();
+  const [products, setProduct] = useState([]);
 
   useEffect(() => {
-    console.log(prod);
-  }, [prod]);
+    Axios.get("http://localhost:8080/products").then((response) => {
+      setProduct(response.data);
+    });
+  }, [products]);
 
   return (
     <>

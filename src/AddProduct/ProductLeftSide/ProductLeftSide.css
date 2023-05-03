@@ -1,0 +1,11 @@
+.Addproduct {
+  height: 400px;
+  width: 500px;
+  background-color: antiquewhite;
+  border-radius: 5%;
+}
+
+.formcss {
+  margin: 10%;
+  padding-top: 5px;
+}

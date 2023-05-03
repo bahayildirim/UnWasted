@@ -131,6 +131,27 @@ code {
   font-weight: bold;
 }
 
+.allCard {
+  width: 50%;
+  height: 50%;
+  margin-bottom: 12%;
+  margin-right: 5%;
+  margin-top: 3%;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.configureButton {
+  display: flex;
+  justify-content: center;
+  margin-top: 2%;
+}
+
 /*
 
   overflow-y: scroll;

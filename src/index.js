@@ -9,7 +9,6 @@ import reportWebVitals from "./reportWebVitals";
 import Profile from "./Profile/Profile";
 import Login from "./LoginRegister/App";
 import Addproduct from "./AddProduct/AddProduct";
-import ProductRightSide from "./ProductRightSide/App";
 
 const router = createBrowserRouter([
   {
@@ -23,10 +22,6 @@ const router = createBrowserRouter([
   {
     path: "/addproduct",
     element: <Addproduct />,
-  },
-  {
-    path: "/productRight",
-    element: <ProductRightSide />,
   },
 ]);
 
