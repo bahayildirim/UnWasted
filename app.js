@@ -241,7 +241,7 @@ function updateValue(currentValue, newValue) {
 app.get("/profile/:id", (req, res) => {
   var id = req.params.id;
   var query = `SELECT * FROM users WHERE id = "${id}"`;
-  db.run(query, (err) => {
+  db.get(query, (err, row) => {
     if (err) {
       console.log(err);
     } else {
