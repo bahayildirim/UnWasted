@@ -34,7 +34,7 @@ var db = new sqlite3.Database(
     } else if (err) {
       console.error(err.message);
     } else {
-      console.log("Connected to the user info database.");
+      console.log("Connected to the database.");
     }
   }
 );
@@ -63,45 +63,45 @@ function createTables(newdb) {
     address TEXT,
     logo TEXT
   );`);
-}
 
-db.run(
-  `CREATE TABLE IF NOT EXISTS products (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id INTEGER NOT NULL,
-  product_name TEXT NOT NULL,
-  price REAL NOT NULL,
-  information TEXT NOT NULL,
-  expiration_date DATETIME NOT NULL,
-  date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  stock INTEGER NOT NULL,
-  FOREIGN KEY(user_id) REFERENCES users(id)
-);`,
-  function (err) {
-    if (err) {
-      console.log("Error creating products table:", err);
-    } else {
-      console.log("Products table created successfully");
+  db.run(
+    `CREATE TABLE IF NOT EXISTS products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    product_name TEXT NOT NULL,
+    price REAL NOT NULL,
+    information TEXT NOT NULL,
+    expiration_date DATETIME NOT NULL,
+    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    stock INTEGER NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+  );`,
+    function (err) {
+      if (err) {
+        console.log("Error creating products table:", err);
+      } else {
+        console.log("Products table created successfully");
+      }
     }
-  }
-)
-db.run(
-  `CREATE TABLE IF NOT EXISTS orders (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  product_id INTEGER NOT NULL,
-  user_id INTEGER NOT NULL,
-  date_ordered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY(product_id) REFERENCES products(id),
-  FOREIGN KEY(user_id) REFERENCES users(id)
-);`,
-  function (err) {
-    if (err) {
-      console.log("Error creating orders table:", err);
-    } else {
-      console.log("Orders table created successfully");
+  )
+  db.run(
+    `CREATE TABLE IF NOT EXISTS orders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    product_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    date_ordered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(product_id) REFERENCES products(id),
+    FOREIGN KEY(user_id) REFERENCES users(id)
+  );`,
+    function (err) {
+      if (err) {
+        console.log("Error creating orders table:", err);
+      } else {
+        console.log("Orders table created successfully");
+      }
     }
-  }
-);
+  );
+}
 
 app.use(
   session({
@@ -232,8 +232,10 @@ app.put("/profile/:id", (req, res) => {
 
 function updateValue(currentValue, newValue) {
   if (newValue == "undefined" || newValue == null) {
+    console.log(currentValue);
     return currentValue;
   } else {
+    console.log(newValue);
     return newValue;
   }
 }
@@ -268,6 +270,21 @@ app.post("/addproduct", (req, res) => {
         res.status(500).send("Product could not be added.");
       } else {
         res.status(200).send("Product added successfully.");
+      }
+    }
+  );
+});
+
+app.post("/deleteproduct", (req, res) => {
+  const productid = req.body.productid;
+  db.run(
+    `DELETE FROM products WHERE id = "${productid}"`,
+    (err) => {
+      if (err) {
+        console.log(err.message);
+        res.status(500).send("Product could not be deleted.");
+      } else {
+        res.status(200).send("Product deleted successfully.");
       }
     }
   );
@@ -325,45 +342,129 @@ app.post("/addorder", (req, res) => {
         console.log(err.message);
         res.status(500).send("Order could not be added.");
       } else {
-        //Reduce stock by 1 if order is successful
-        var query = `UPDATE products SET stock = stock - 1 WHERE id = "${productid}" AND stock > 0`
-        db.run(query, (err) => {
+        //Reduce stock by 1 if order is successful and if the product is not removed
+
+        var query3 = `UPDATE products SET stock = stock - 1 WHERE id = "${productid}" AND stock > 0`;
+        db.run(query3, (err) => {
           if (err) {
             console.log("Error while decreasing stock:");
             console.log(err.message);
           } 
         })
-        res.status(200).send("Order added successfully.");
       }
     }
-  );
+  )
+  res.status(200).send("Order added successfully.");
 });
 
-app.post("/deleteorder", (req, res) => {
+app.post("/cancelorder", (req, res) => {
   const productid = req.body.productid;
   //Automatically add user's id to the database
   const userid = req.session.userid;
   console.log("userid: " + userid);
   console.log("productid: " + productid);
-  db.run(
-    `DELETE FROM orders WHERE user_id = "${userid}" AND product_id = "${productid}"`, (err) => {
-      if (err) {
-        console.log(err.message);
-        res.status(500).send("Order could not be deleted.");
-      } else {
-        //Increase stock by 1 if order is deleted
-        var query = `UPDATE products SET stock = stock + 1 WHERE id = "${productid}"`
-        db.run(query, (err) => {
-          if (err) {
-            console.log("Error while increasing stock:");
-            console.log(err.message);
-          } 
-        })
-        res.status(200).send("Order deleted successfully.");
-      }
+
+  deleteOrder(productid, userid, function (isOrderDeleted) {
+    if (isOrderDeleted) {
+      //Increase stock by 1 if order is deleted
+      var query = `UPDATE products SET stock = stock + 1 WHERE id = "${productid}"`
+      db.run(query, (err) => {
+        if (err) {
+          console.log("Error while increasing stock:");
+          console.log(err.message);
+          res.status(500).send("An error has occurred");
+        } else  {
+          //Checks for changes in the database
+          db.get("SELECT changes() as changes", (err, row) => {
+            console.log("Rows deleted:", row.changes);
+            if (err) {
+              console.log("Error while checking for stock changes:");
+              console.log(err.message);
+              res.status(500).send("Stock could not be increased.");
+            } else if (row.changes > 0) {
+              res.status(200).send("Stock increased successfully.");
+            } else {
+              res.status(500).send("Stock could not be increased.");
+            }
+          });
+        } 
+      })
+    } else {
+      res.status(500).send("There is no order to cancel.");
     }
-  );
+  });
+  
+  
 });
+
+app.post("/completeorder", (req, res) => {
+  const productid = req.body.productid;
+  //Automatically add user's id to the database
+  const userid = req.session.userid;
+  console.log("userid: " + userid);
+  console.log("productid: " + productid);
+  
+  deleteOrder(productid, userid, (isOrderDeleted) => {
+    if (isOrderDeleted) {
+     //Remove product if stock is equal to zero
+        
+     
+     var query2 =   `DELETE FROM products WHERE id = "${productid}" AND stock = 0 
+     AND NOT EXISTS (
+         SELECT 2 FROM orders 
+         LEFT JOIN products ON orders.product_id = products.id 
+         WHERE products.id = "${productid}"
+         AND orders.user_id = "${userid}"
+     )`;
+     db.run(query2, (err) => {
+       if (err) {
+         console.log("Error while deleting product:");
+         console.log(err.message);
+       } else {
+        //Checks for changes in the database
+        db.get("SELECT changes() as changes", (err, row) => {
+          console.log("Rows deleted:", row.changes);
+          if (err) {
+            console.log("Error while checking for changes:");
+            console.log(err.message);
+            res.status(500).send("Order could not be completed.");
+          } else if (row.changes > 0) {
+            res.status(200).send("Product deleted successfully.");
+          } else {
+            res.status(500).send("Order completed successfully");
+          }
+        });
+      }
+     })
+    } else {
+      res.status(500).send("Order could not be deleted.");
+    }
+  })
+});
+
+
+// Deletes from orders database if there's an entry with given id's
+function deleteOrder(productid, userid, callback) {
+  console.log("userid in deleteOrder: " + userid);
+  console.log("productid in deleteOrder: " + productid);
+  db.run(
+    `DELETE FROM orders WHERE user_id = "${userid}" AND product_id = "${productid}"`, function(err) {
+      if (err) {
+        console.log("Order could not be deleted");
+        console.log(err.message);
+        var isOrderDeleted = false;
+        callback(isOrderDeleted);
+      } else if (this.changes > 0) {
+        console.log("Order deleted");
+        var isOrderDeleted = true;
+        callback(isOrderDeleted);
+      } else {
+        console.log("Order not found");
+        var isOrderDeleted = false;
+        callback(isOrderDeleted);
+      }
+  });
+}
 
 const PORT = process.env.PORT || 8080;
 
