@@ -17,15 +17,13 @@ function App() {
       <div className="productContainer">
         <div className="productBoxs">
           {products.map((product) => {
-            if (product.amount != 0) {
-              return (
-                <Product
-                  key={product.id}
-                  product={product}
-                  setProduct={setProduct}
-                />
-              );
-            }
+            return (
+              <Product
+                key={product.id}
+                product={product}
+                setProduct={setProduct}
+              />
+            );
           })}
         </div>
       </div>
