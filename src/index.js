@@ -9,6 +9,7 @@ import reportWebVitals from "./reportWebVitals";
 import Profile from "./Profile/Profile";
 import Login from "./LoginRegister/App";
 import Addproduct from "./AddProduct/AddProduct";
+import AfterOrder from "./AfterOrder/AfterOrder";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: "/addproduct",
     element: <Addproduct />,
+  },
+  {
+    path: "/afterOrder",
+    element: <AfterOrder />,
   },
 ]);
 
