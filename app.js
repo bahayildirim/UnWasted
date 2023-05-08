@@ -69,7 +69,6 @@ function createTables(newdb) {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     product_name TEXT NOT NULL,
-    price REAL NOT NULL,
     information TEXT NOT NULL,
     expiration_date DATETIME NOT NULL,
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -83,7 +82,8 @@ function createTables(newdb) {
         console.log("Products table created successfully");
       }
     }
-  )
+  );
+  
   db.run(
     `CREATE TABLE IF NOT EXISTS orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
