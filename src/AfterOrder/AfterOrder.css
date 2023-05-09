@@ -93,3 +93,17 @@
   font-weight: 700;
   color: #aa4a30;
 }
+
+.mapIcon {
+  width: 3vw;
+  height: 7vh;
+  color: #aa4a30;
+}
+
+.iconDiv {
+  justify-content: end;
+}
+
+.mapButton {
+  background-color: transparent;
+}

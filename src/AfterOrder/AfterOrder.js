@@ -5,6 +5,8 @@ import bellIcon from "./Assets/bellicon.svg";
 import productImage from "./Assets/productImage.png";
 import clockIcon from "./Assets/clockicon.svg";
 import Counter from "./Counter/Counter";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMapLocationDot } from "@fortawesome/free-solid-svg-icons";
 
 function AfterOrder() {
   const [code, setCode] = useState("");
@@ -13,6 +15,15 @@ function AfterOrder() {
     const randomCode = Math.floor(100000 + Math.random() * 900000);
     setCode(randomCode.toString());
   }, []);
+
+  const handleAddressClick = () => {
+    const address =
+      "Feridun Çelik Mahallesi 1652. Cadde No:1 Daire:2 Altındağ/Ankara";
+    const searchAddress = encodeURI(address);
+    window.open(
+      `https://www.google.com/maps/search/?api=1&query=${searchAddress}`
+    );
+  };
 
   return (
     <div className="body">
@@ -31,15 +42,22 @@ function AfterOrder() {
             </div>
           </div>
           <div className="container-fluid d-flex mt-3 centerBody">
-            <div className="container d-flex me-4 map">
-              <iframe
-                title="companyAddress"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3064.5992920981435!2d32.7218657764609!3d39.81597929198329!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14d3407df85a883d%3A0xd9b8ddbc18679edf!2zS8SxesSxbGNhxZ9hciwgQXTEsWzEsW0gw5xudi4sIDA2ODMwIEfDtmxiYcWfxLEvQW5rYXJh!5e0!3m2!1str!2str!4v1683462083684!5m2!1str!2str"
-                className="w-100 h-100"
-                allowfullscreen=""
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-              ></iframe>
+            <div className="container d-flex me-4 codeBox">
+              <div>
+                <h3>Order Address</h3>
+                <address>
+                  Feridun Çelik Mahallesi Şehit Mehmet Kocakaya Caddesi No:1
+                  Daire:2 Altındağ/Ankara
+                </address>
+                <div className="container d-flex iconDiv">
+                  <button className="mapButton" onClick={handleAddressClick}>
+                    <FontAwesomeIcon
+                      icon={faMapLocationDot}
+                      className="mapIcon"
+                    />
+                  </button>
+                </div>
+              </div>
             </div>
             <div className="container d-flex me-4 productImage">
               <img
