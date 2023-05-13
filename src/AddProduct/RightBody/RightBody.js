@@ -1,10 +1,21 @@
 import { useEffect, useState } from "react";
+import Axios from "axios";
+import ProductCard from "../ProductCard/ProductCard";
 
 function RightBody() {
+  const [products, setProduct] = useState([]);
+
+  useEffect(() => {
+    Axios.get("http://localhost:8080/products").then((response) => {
+      setProduct(response.data);
+    });
+  }, []);
+
   return (
-    <div className="container rightbody">
-      <h1>hello</h1>
-      <h1>Right Body</h1>
+    <div className="container flex-column">
+      {products.map((product) => {
+        return <ProductCard product={product} />;
+      })}
     </div>
   );
 }

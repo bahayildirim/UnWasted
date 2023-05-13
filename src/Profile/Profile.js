@@ -1,8 +1,6 @@
 import "./Profile.style.css";
 import Navbar from "../Navbar/Navbar.js";
 import "bootstrap/dist/css/bootstrap.css";
-import { Button, Card } from "react-bootstrap";
-import apple from "./Assets/apple.jpg";
 import ArkaPlan from "./Assets/arkaplan.jpg";
 import { useState, useEffect } from "react";
 import {
@@ -16,23 +14,14 @@ import {
   MDBTypography,
   MDBIcon,
   MDBBtn,
-  MDBInput,
-  MDBInputGroup,
 } from "mdb-react-ui-kit";
 import Axios from "axios";
 
 export default function Profile() {
   const [change, setChange] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setpassword] = useState("");
-  const [fullname, setfullname] = useState("");
-  const [phone_no, setPhone] = useState("");
-  const [address, setaddress] = useState("");
   const [user, setUser] = useState({});
   const [changedData, setChangedData] = useState({});
   const [userid, setuserid] = useState();
-
-  const id = 3;
 
   // useEffect(() => {
   //   try {
@@ -56,12 +45,6 @@ export default function Profile() {
     }
     getcookie();
   }, []);
-
-  Axios.get("http://localhost:8080/getcookie", { withCredentials: true }).then(
-    (response) => {
-      console.log("gelen değer: " + response.data);
-    }
-  );
 
   console.log("userid DEĞERi: " + userid);
 

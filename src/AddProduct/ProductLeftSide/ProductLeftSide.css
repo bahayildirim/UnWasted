@@ -1,11 +1,19 @@
 .Addproduct {
-  height: 50%;
-  width: 50.5%;
+  height: 50vh;
+  width: 30vw;
   background-color: antiquewhite;
   border-radius: 5%;
 }
 
 .formcss {
-  margin: 10%;
+  padding: 5%;
+}
+
+.formHeader {
+  padding-left: 8%;
   padding-top: 5%;
+}
+
+.formHeaderText {
+  color: #4f261a;
 }

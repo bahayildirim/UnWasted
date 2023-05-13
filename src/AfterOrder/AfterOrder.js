@@ -7,13 +7,29 @@ import clockIcon from "./Assets/clockicon.svg";
 import Counter from "./Counter/Counter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapLocationDot } from "@fortawesome/free-solid-svg-icons";
+import Axios from "axios";
 
 function AfterOrder() {
   const [code, setCode] = useState("");
+  const [order, setOrder] = useState([]);
+
+  // useEffect(() => {
+  //   const randomCode = Math.floor(100000 + Math.random() * 900000);
+  //   setCode(randomCode.toString());
+  // }, []);
 
   useEffect(() => {
-    const randomCode = Math.floor(100000 + Math.random() * 900000);
-    setCode(randomCode.toString());
+    async function getorder() {
+      try {
+        const response = await Axios.get(`http://localhost:8080/orders`, {
+          withCredentials: true,
+        });
+        setOrder(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getorder();
   }, []);
 
   const handleAddressClick = () => {
@@ -67,7 +83,9 @@ function AfterOrder() {
               />
             </div>
             <div className="container d-flex codeBox">
-              <p className="codeText">{code}</p>
+              <p className="codeText">
+                {order.length > 0 ? order[0].order_code : <p>...</p>}
+              </p>
             </div>
           </div>
           <div className="container-fluid d-flex footer">

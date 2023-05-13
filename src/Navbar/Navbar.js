@@ -30,31 +30,39 @@ import {
 
 import "./Navbar.style.css";
 
+import Axios from "axios";
+
 import Logo from "../Navbar/Assets/Logo.svg";
 
 function NavScrollExample(props) {
   const [showBasic, setShowBasic] = useState(false);
-  let navigate = useNavigate(); 
-  const routeChange = () =>{ 
-    let path = `login`; 
+  let navigate = useNavigate();
+  const routeChange = () => {
+    let path = `login`;
     navigate(path);
-  }
+  };
 
   const toggleStyle = {
-    backgroundColor: '#E89F71',
-    color: '#AA4A30',
-    border: 'none',
-    fontSize: '1.2rem',
+    backgroundColor: "#E89F71",
+    color: "#AA4A30",
+    border: "none",
+    fontSize: "1.2rem",
   };
 
   const menuStyle = {
-    backgroundColor: '#E89F71',
-    color: 'white',
-    width: '200px',
-    borderRadius: '10px',
-    fontSize: '1.2rem',
-    padding: '10px',
+    backgroundColor: "#E89F71",
+    color: "white",
+    width: "200px",
+    borderRadius: "10px",
+    fontSize: "1.2rem",
+    padding: "10px",
   };
+
+  function logout() {
+    Axios.get("http://localhost:8080/logout", {
+      withCredentials: true,
+    });
+  }
   return (
     <MDBNavbar expand="lg" light>
       <MDBContainer fluid>
@@ -73,44 +81,50 @@ function NavScrollExample(props) {
 
         <MDBCollapse navbar show={showBasic}>
           <MDBNavbarNav className="mr-auto mb-2 mb-lg-0">
-          <MDBNavbarBrand>
-            <MDBNavbarItem>
-              <MDBNavbarLink active aria-current="page" href="#">
-                Home
-              </MDBNavbarLink>
-            </MDBNavbarItem>
+            <MDBNavbarBrand>
+              <MDBNavbarItem>
+                <MDBNavbarLink active aria-current="page" href="#">
+                  Home
+                </MDBNavbarLink>
+              </MDBNavbarItem>
             </MDBNavbarBrand>
             <MDBNavbarBrand>
-            <MDBNavbarItem>
-              <MDBNavbarLink active aria-current="page" href="#">
-                Packages
-              </MDBNavbarLink>
-            </MDBNavbarItem>
+              <MDBNavbarItem>
+                <MDBNavbarLink active aria-current="page" href="#">
+                  Packages
+                </MDBNavbarLink>
+              </MDBNavbarItem>
             </MDBNavbarBrand>
             <MDBNavbarBrand>
-            <MDBNavbarItem>
-              <MDBNavbarLink active aria-current="page" href="#">
-                Review
-              </MDBNavbarLink>
-            </MDBNavbarItem>
+              <MDBNavbarItem>
+                <MDBNavbarLink active aria-current="page" href="#">
+                  Review
+                </MDBNavbarLink>
+              </MDBNavbarItem>
             </MDBNavbarBrand>
             <MDBNavbarBrand>
-            <MDBNavbarItem>
-              <MDBNavbarLink active aria-current="page" href="#">
-                About Us
-              </MDBNavbarLink>
-            </MDBNavbarItem>
+              <MDBNavbarItem>
+                <MDBNavbarLink active aria-current="page" href="#">
+                  About Us
+                </MDBNavbarLink>
+              </MDBNavbarItem>
             </MDBNavbarBrand>
           </MDBNavbarNav>
 
-          <MDBDropdown group className='shadow-0'>
-        <MDBDropdownToggle style={toggleStyle}><MDBIcon fas icon="user-ninja" /> Donerci</MDBDropdownToggle>
-        <MDBDropdownMenu style={menuStyle}>
-          <MDBDropdownItem link href="/">Profile</MDBDropdownItem>
-          <MDBDropdownItem link>Orders</MDBDropdownItem>
-          <MDBDropdownItem link href="/login">LogOut</MDBDropdownItem>
-        </MDBDropdownMenu>
-      </MDBDropdown>
+          <MDBDropdown group className="shadow-0">
+            <MDBDropdownToggle style={toggleStyle}>
+              <MDBIcon fas icon="user-ninja" /> Donerci
+            </MDBDropdownToggle>
+            <MDBDropdownMenu style={menuStyle}>
+              <MDBDropdownItem link href="/">
+                Profile
+              </MDBDropdownItem>
+              <MDBDropdownItem link>Orders</MDBDropdownItem>
+              <MDBDropdownItem link href="/login" onClick={logout}>
+                LogOut
+              </MDBDropdownItem>
+            </MDBDropdownMenu>
+          </MDBDropdown>
         </MDBCollapse>
       </MDBContainer>
     </MDBNavbar>

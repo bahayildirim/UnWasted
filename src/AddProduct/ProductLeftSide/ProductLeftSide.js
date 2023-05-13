@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Axios from "axios";
 import Navbar from "../../Navbar/Navbar.js";
 import "bootstrap/dist/css/bootstrap.css";
@@ -7,21 +7,33 @@ import "./ProductLeftSide.css";
 function App() {
   //const [check, setCheck] = useState(false);
   const [productName, setProductName] = useState();
-
   const [stock, setStock] = useState();
   const [describe, setDescribe] = useState();
   const [time, setTime] = useState();
+  const [userid, setuserid] = useState();
 
-  const addItem = () => {
+  useEffect(() => {
+    async function getcookie() {
+      let response = await Axios.get("http://localhost:8080/getcookie", {
+        withCredentials: true,
+      });
+      setuserid(response.data);
+    }
+    getcookie();
+  }, []);
+
+  function addItem() {
     Axios.post("http://localhost:8080/addproduct", {
       productname: productName,
       stock: stock,
       expirationdate: time,
       information: describe,
+      userid: userid,
     }).then((response) => {
       console.log(response);
+      window.location.reload();
     });
-  };
+  }
   // const handleCheckboxChange = (event) => {
   // setCheck(event.target.checked);
   //};
@@ -29,6 +41,9 @@ function App() {
   return (
     <div>
       <div className="Addproduct">
+        <div className="container d-flex formHeader">
+          <h1 className="formHeaderText">Add Product</h1>
+        </div>
         <form className="formcss">
           <div class="form-outline mb-4">
             <input
@@ -110,7 +125,7 @@ function App() {
               boxShadow: "none",
             }}
             onClick={addItem}
-            class="btn btn-primary btn-block mb-4"
+            class="btn btn-primary btn-block mb-4 "
           >
             Add Food
           </button>
