@@ -11,6 +11,8 @@ import Profile from "./Profile/Profile";
 import Login from "./LoginRegister/App";
 import Addproduct from "./AddProduct/AddProduct";
 import AfterOrder from "./AfterOrder/AfterOrder";
+import ContactForm from "./ContactForm/ContactForm";
+import AdminPage from "./AdminPage/AdminPage";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +30,14 @@ const router = createBrowserRouter([
   {
     path: "/afterOrder",
     element: <AfterOrder />,
+  },
+  {
+    path: "/contactUs",
+    element: <ContactForm />,
+  },
+  {
+    path: "/adminPage",
+    element: <AdminPage />,
   },
 ]);
 

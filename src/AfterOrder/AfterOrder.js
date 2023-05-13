@@ -12,6 +12,7 @@ import Axios from "axios";
 function AfterOrder() {
   const [code, setCode] = useState("");
   const [order, setOrder] = useState([]);
+  const [user, setUser] = useState([]);
 
   // useEffect(() => {
   //   const randomCode = Math.floor(100000 + Math.random() * 900000);
@@ -32,9 +33,16 @@ function AfterOrder() {
     getorder();
   }, []);
 
+  useEffect(() => {
+    Axios.get("http://localhost:8080/profile", { withCredentials: true }).then(
+      (response) => {
+        setUser(response.data);
+      }
+    );
+  }, []);
+
   const handleAddressClick = () => {
-    const address =
-      "Feridun Çelik Mahallesi 1652. Cadde No:1 Daire:2 Altındağ/Ankara";
+    const address = user.address;
     const searchAddress = encodeURI(address);
     window.open(
       `https://www.google.com/maps/search/?api=1&query=${searchAddress}`
@@ -61,10 +69,7 @@ function AfterOrder() {
             <div className="container d-flex me-4 codeBox">
               <div>
                 <h3>Order Address</h3>
-                <address>
-                  Feridun Çelik Mahallesi Şehit Mehmet Kocakaya Caddesi No:1
-                  Daire:2 Altındağ/Ankara
-                </address>
+                <address>{user.address}</address>
                 <div className="container d-flex iconDiv">
                   <button className="mapButton" onClick={handleAddressClick}>
                     <FontAwesomeIcon

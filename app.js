@@ -123,6 +123,23 @@ db.run(
   }
 );
 
+db.run(
+  `CREATE TABLE IF NOT EXISTS contacts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  message TEXT NOT NULL,
+  FOREIGN KEY(user_id) REFERENCES users(id)
+);`,
+  function (err) {
+    if (err) {
+      console.log("Error creating contacts table:", err);
+    } else {
+      console.log("Contacts table created successfully");
+    }
+  }
+);
+
 app.use(
   session({
     store: new SqliteStore({
@@ -210,8 +227,9 @@ app.get("/getcookie", (req, res) => {
   res.status(200).send(req.session.userid.toString());
 });
 
-app.put("/profile/:id", (req, res) => {
-  var id = req.params.id;
+app.put("/profile", (req, res) => {
+  var id = req.session.userid;
+  console.log("put prof id: " + id);
   var email = req.body.email;
   var password = req.body.password;
   var fullname = req.body.fullname;
@@ -259,6 +277,18 @@ function updateValue(currentValue, newValue) {
     return newValue;
   }
 }
+
+app.get("/profile", (req, res) => {
+  var id = req.session.userid;
+  var query = `SELECT * FROM users WHERE id = "${id}"`;
+  db.get(query, (err, row) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.status(200).send(row);
+    }
+  });
+});
 
 app.get("/profile/:id", (req, res) => {
   var id = req.params.id;
@@ -480,6 +510,69 @@ function deleteOrder(productid, userid, callback) {
     }
   );
 }
+
+app.post("/contacts", (req, res) => {
+  const userid = req.session.userid;
+  const message = req.body.message;
+
+  db.run(
+    `INSERT INTO contacts (user_id, message) VALUES (?,?)`,
+    [userid, message],
+    (err) => {
+      if (err) {
+        console.log(err);
+        res.status(404).send("Message can not send " + err);
+      } else {
+        console.log(err);
+        res.status(200).send("Message sent successfully");
+      }
+    }
+  );
+});
+
+app.post("/answercontact", (req, res) => {
+  const contactid = req.body.contactid;
+  const feedback = req.body.feedback;
+
+  db.run(
+    `UPDATE contacts SET feedback = ?, status = 'SOLVED' WHERE id = ?`,
+    [feedback, contactid],
+    (err) => {
+      if (err) {
+        console.log(err);
+        res.status(404).send("Feedback can not be saved " + err);
+      } else {
+        console.log(err);
+        res.status(200).send("Feedback saved successfully");
+      }
+    }
+  );
+});
+
+app.get("/contacts", (req, res) => {
+  const userid = req.session.userid;
+  const query = `SELECT * FROM contacts WHERE user_id = ${userid}`;
+  db.all(query, (err, rows) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(rows);
+      res.status(200).send(rows);
+    }
+  });
+});
+
+app.get("/allcontacts", (req, res) => {
+  const query = `SELECT * FROM contacts`;
+  db.all(query, (err, rows) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(rows);
+      res.status(200).send(rows);
+    }
+  });
+});
 
 const PORT = process.env.PORT || 8080;
 

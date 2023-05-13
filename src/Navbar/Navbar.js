@@ -10,7 +10,7 @@ import {
   Card,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MDBContainer,
   MDBNavbar,
@@ -36,6 +36,16 @@ import Logo from "../Navbar/Assets/Logo.svg";
 
 function NavScrollExample(props) {
   const [showBasic, setShowBasic] = useState(false);
+  const [user, setUser] = useState([]);
+
+  useEffect(() => {
+    Axios.get("http://localhost:8080/profile", { withCredentials: true }).then(
+      (response) => {
+        setUser(response.data);
+      }
+    );
+  }, []);
+
   let navigate = useNavigate();
   const routeChange = () => {
     let path = `login`;
@@ -66,7 +76,7 @@ function NavScrollExample(props) {
   return (
     <MDBNavbar expand="lg" light>
       <MDBContainer fluid>
-        <MDBNavbarBrand href="#">
+        <MDBNavbarBrand href="/">
           <img src={Logo} height="30" alt="" loading="lazy" />
         </MDBNavbarBrand>
 
@@ -83,7 +93,7 @@ function NavScrollExample(props) {
           <MDBNavbarNav className="mr-auto mb-2 mb-lg-0">
             <MDBNavbarBrand>
               <MDBNavbarItem>
-                <MDBNavbarLink active aria-current="page" href="#">
+                <MDBNavbarLink active aria-current="page" href="/">
                   Home
                 </MDBNavbarLink>
               </MDBNavbarItem>
@@ -109,6 +119,22 @@ function NavScrollExample(props) {
                 </MDBNavbarLink>
               </MDBNavbarItem>
             </MDBNavbarBrand>
+            <MDBNavbarBrand>
+              <MDBNavbarItem>
+                <MDBNavbarLink active aria-current="page" href="contactUs">
+                  Contact Us
+                </MDBNavbarLink>
+              </MDBNavbarItem>
+            </MDBNavbarBrand>
+            {user.isAdmin ? (
+              <MDBNavbarBrand>
+                <MDBNavbarItem>
+                  <MDBNavbarLink active aria-current="page" href="adminPage">
+                    Contact Forms
+                  </MDBNavbarLink>
+                </MDBNavbarItem>
+              </MDBNavbarBrand>
+            ) : null}
           </MDBNavbarNav>
 
           <MDBDropdown group className="shadow-0">

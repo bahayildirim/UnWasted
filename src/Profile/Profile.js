@@ -19,7 +19,7 @@ import Axios from "axios";
 
 export default function Profile() {
   const [change, setChange] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState([]);
   const [changedData, setChangedData] = useState({});
   const [userid, setuserid] = useState();
 
@@ -36,18 +36,6 @@ export default function Profile() {
   //   }
   // }, []);
 
-  useEffect(() => {
-    async function getcookie() {
-      let response = await Axios.get("http://localhost:8080/getcookie", {
-        withCredentials: true,
-      });
-      setuserid(response.data);
-    }
-    getcookie();
-  }, []);
-
-  console.log("userid DEĞERi: " + userid);
-
   function handleForm(state) {
     setChange(!state);
   }
@@ -57,17 +45,20 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    Axios.get("http://localhost:8080/profile/" + userid).then((response) => {
-      setUser(response.data);
-      setChangedData(response.data);
-    });
-  }, [userid]);
+    Axios.get("http://localhost:8080/profile", { withCredentials: true }).then(
+      (response) => {
+        setUser(response.data);
+        setChangedData(response.data);
+      }
+    );
+  }, []);
 
   const edit = (event) => {
-    Axios.put(`http://localhost:8080/profile/${userid}`, changedData, {
+    Axios.put(`http://localhost:8080/profile`, changedData, {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
     }).then((response) => {
       setUser(response.data);
       setChangedData(response.data);
@@ -101,7 +92,7 @@ export default function Profile() {
                       fluid
                     />
                     <MDBTypography tag="h5">{user.fullname}</MDBTypography>
-                    <MDBCardText>Donator/Buyer</MDBCardText>
+                    <MDBCardText>{user.type}</MDBCardText>
                     <MDBBtn
                       className="ms-2"
                       tag="a"
