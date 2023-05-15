@@ -140,6 +140,24 @@ db.run(
   }
 );
 
+db.run(
+  `CREATE TABLE IF NOT EXISTS cart (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  product_id INTEGER NOT NULL,
+  date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(user_id) REFERENCES users(id),
+  FOREIGN KEY(product_id) REFERENCES products(id)
+);`,
+  function (err) {
+    if (err) {
+      console.log("Error creating cart table:", err);
+    } else {
+      console.log("Cart table created successfully");
+    }
+  }
+);
+
 app.use(
   session({
     store: new SqliteStore({
@@ -323,6 +341,36 @@ app.post("/addproduct", (req, res) => {
       }
     }
   );
+});
+
+app.post("/addcart", (req, res) => {
+  const productId = req.body.productId;
+  const userid = req.session.userid;
+  console.log("useridsession: " + req.session.userid);
+  db.run(
+    `INSERT INTO cart (user_id, product_id) VALUES (?, ?)`,
+    [userid, productId],
+    (err) => {
+      if (err) {
+        console.log(err.message);
+        res.status(500).send("Product could not be added to cart.");
+      } else {
+        res.status(200).send("Product added successfully to cart.");
+      }
+    }
+  );
+});
+
+app.get("/cartItem", (req, res) => {
+  var id = req.session.userid;
+  var query = `SELECT * FROM cart WHERE user_id = "${id}"`;
+  db.get(query, (err, row) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(row);
+    }
+  });
 });
 
 app.post("/deleteproduct", (req, res) => {

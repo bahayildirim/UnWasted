@@ -14,13 +14,14 @@ import AfterOrder from "./AfterOrder/AfterOrder";
 import ContactForm from "./ContactForm/ContactForm";
 import AdminPage from "./AdminPage/AdminPage";
 import Homepage from "./HomePage/homepage";
+import Products from "./Products/App";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Homepage />,
   },
-  
+
   {
     path: "/profile",
     element: <Profile />,
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
   {
     path: "/adminPage",
     element: <AdminPage />,
+  },
+  {
+    path: "/products",
+    element: <Products />,
   },
 ]);
 

@@ -26,25 +26,20 @@
 .button {
   color: #edcfa9;
 }
-
-.form-control {
-  background-color: #edcfa9;
-}
-
-.cart {
+.cart{
   cursor: pointer;
 }
 /* ?? */
 
-.cart span:nth-child(1) {
+.cart span:nth-child(1){
   font-size: 2.3rem;
   color: white;
 }
 /* Sepet ikonu */
 
-.cart span:nth-child(2) {
+.cart span:nth-child(2){
   padding: 0 5px;
-  background-color: #aa4a30;
+  background-color: #AA4A30;
   color: white;
   font-weight: bold;
   border-radius: 20%;

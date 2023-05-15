@@ -30,13 +30,17 @@ import {
 
 import "./Navbar.style.css";
 
-import Axios from "axios";
-
 import Logo from "../Navbar/Assets/Logo.svg";
 
-function NavScrollExample(props) {
+import Axios from "axios";
+
+import { useLocation } from "react-router-dom";
+
+function NavScrollExample({ size, setShow, show }) {
   const [showBasic, setShowBasic] = useState(false);
   const [user, setUser] = useState([]);
+
+  const location = useLocation();
 
   useEffect(() => {
     Axios.get("http://localhost:8080/profile", { withCredentials: true }).then(
@@ -51,6 +55,11 @@ function NavScrollExample(props) {
     let path = `login`;
     navigate(path);
   };
+  function logout() {
+    Axios.get("http://localhost:8080/logout", {
+      withCredentials: true,
+    });
+  }
 
   const toggleStyle = {
     backgroundColor: "#E89F71",
@@ -68,11 +77,24 @@ function NavScrollExample(props) {
     padding: "10px",
   };
 
-  function logout() {
-    Axios.get("http://localhost:8080/logout", {
-      withCredentials: true,
-    });
+  const Loginbutton = {
+    backgroundColor: "rgba(237, 207, 169, 0)",
+    color: "#EDCFA9",
+    border: "none",
+    fontSize: "1.0rem",
+    borderRadius: "1.5rem",
+    width: "9rem",
+    height: "2.5rem",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "bold",
+  };
+
+  function handleClick() {
+    setShow(false);
   }
+
   return (
     <MDBNavbar expand="lg" light>
       <MDBContainer fluid>
@@ -100,22 +122,8 @@ function NavScrollExample(props) {
             </MDBNavbarBrand>
             <MDBNavbarBrand>
               <MDBNavbarItem>
-                <MDBNavbarLink active aria-current="page" href="#">
-                  Packages
-                </MDBNavbarLink>
-              </MDBNavbarItem>
-            </MDBNavbarBrand>
-            <MDBNavbarBrand>
-              <MDBNavbarItem>
-                <MDBNavbarLink active aria-current="page" href="#">
-                  Review
-                </MDBNavbarLink>
-              </MDBNavbarItem>
-            </MDBNavbarBrand>
-            <MDBNavbarBrand>
-              <MDBNavbarItem>
-                <MDBNavbarLink active aria-current="page" href="#">
-                  About Us
+                <MDBNavbarLink active aria-current="page" href="/products">
+                  Products
                 </MDBNavbarLink>
               </MDBNavbarItem>
             </MDBNavbarBrand>
@@ -135,21 +143,52 @@ function NavScrollExample(props) {
                 </MDBNavbarItem>
               </MDBNavbarBrand>
             ) : null}
+            <MDBNavbarBrand>
+              <MDBNavbarItem>
+                <MDBNavbarLink active aria-current="page" href="#">
+                  About Us
+                </MDBNavbarLink>
+              </MDBNavbarItem>
+            </MDBNavbarBrand>
           </MDBNavbarNav>
-          <MDBDropdown group className="shadow-0">
-            <MDBDropdownToggle style={toggleStyle}>
-              <MDBIcon fas icon="user-ninja" /> Donerci
-            </MDBDropdownToggle>
-            <MDBDropdownMenu style={menuStyle}>
-              <MDBDropdownItem link href="/">
-                Profile
-              </MDBDropdownItem>
-              <MDBDropdownItem link>Orders</MDBDropdownItem>
-              <MDBDropdownItem link href="/login" onClick={logout}>
-                LogOut
-              </MDBDropdownItem>
-            </MDBDropdownMenu>
-          </MDBDropdown>
+          {user.length === 0 ? (
+            <>
+              <MDBNavbarBrand>
+                <MDBBtn color="#EDCFA9" style={Loginbutton} href="/login">
+                  Login/Signup
+                </MDBBtn>
+              </MDBNavbarBrand>
+            </>
+          ) : (
+            <>
+              <MDBDropdown group className="shadow-0">
+                <MDBDropdownToggle style={toggleStyle}>
+                  <MDBIcon fas icon="user-ninja" /> {user.fullname}
+                </MDBDropdownToggle>
+                <MDBDropdownMenu style={menuStyle}>
+                  <MDBDropdownItem link href="/">
+                    Profile
+                  </MDBDropdownItem>
+                  <MDBDropdownItem link>Orders</MDBDropdownItem>
+                  <MDBDropdownItem link href="/login" onClick={logout}>
+                    LogOut
+                  </MDBDropdownItem>
+                </MDBDropdownMenu>
+              </MDBDropdown>
+              {location.pathname === "/products" ? (
+                <MDBNavbarBrand>
+                  <MDBNavbarItem>
+                    <div className="cart mb-5" onClick={handleClick}>
+                      <span>
+                        <i className="fas fa-cart-plus"></i>
+                      </span>
+                      <span>{size}</span>
+                    </div>
+                  </MDBNavbarItem>
+                </MDBNavbarBrand>
+              ) : null}
+            </>
+          )}
         </MDBCollapse>
       </MDBContainer>
     </MDBNavbar>
