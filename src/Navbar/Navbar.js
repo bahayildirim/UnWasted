@@ -136,7 +136,6 @@ function NavScrollExample(props) {
               </MDBNavbarBrand>
             ) : null}
           </MDBNavbarNav>
-
           <MDBDropdown group className="shadow-0">
             <MDBDropdownToggle style={toggleStyle}>
               <MDBIcon fas icon="user-ninja" /> Donerci

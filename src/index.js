@@ -13,10 +13,16 @@ import Addproduct from "./AddProduct/AddProduct";
 import AfterOrder from "./AfterOrder/AfterOrder";
 import ContactForm from "./ContactForm/ContactForm";
 import AdminPage from "./AdminPage/AdminPage";
+import Homepage from "./HomePage/homepage";
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <Homepage />,
+  },
+  
+  {
+    path: "/profile",
     element: <Profile />,
   },
   {
