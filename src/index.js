@@ -15,6 +15,7 @@ import ContactForm from "./ContactForm/ContactForm";
 import AdminPage from "./AdminPage/AdminPage";
 import Homepage from "./HomePage/homepage";
 import Products from "./Products/App";
+import Cart from "./Products/Cart";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
   {
     path: "/products",
     element: <Products />,
+  },
+  {
+    path: "/cart",
+    element: <Cart />,
   },
 ]);
 

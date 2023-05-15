@@ -7,6 +7,8 @@ const cors = require("cors");
 const session = require("express-session");
 const sqlite = require("better-sqlite3");
 const cookieParser = require("cookie-parser");
+app.locals.moment = require("moment");
+app.locals.moment.locale("en");
 
 const SqliteStore = require("better-sqlite3-session-store")(session);
 
@@ -51,7 +53,8 @@ function createDatabase() {
 }
 
 //Creates the tables for the database
-db.run(`CREATE TABLE IF NOT EXISTS users (
+db.run(
+  `CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   type TEXT NOT NULL,
   fullname TEXT NOT NULL,
@@ -62,13 +65,14 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
   logo TEXT,
   products_given INTEGER DEFAULT 0
 );`,
-function (err) {
-  if (err) {
-    console.log("Error creating users table:", err);
-  } else {
-    console.log("Users table created successfully");
+  function (err) {
+    if (err) {
+      console.log("Error creating users table:", err);
+    } else {
+      console.log("Users table created successfully");
+    }
   }
-});
+);
 
 db.run(
   `CREATE TABLE IF NOT EXISTS products (
@@ -110,20 +114,20 @@ db.run(
 );
 
 db.run(
-`CREATE TABLE IF NOT EXISTS contacts (
+  `CREATE TABLE IF NOT EXISTS contacts (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 user_id INTEGER NOT NULL,
 date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 message TEXT NOT NULL,
 FOREIGN KEY(user_id) REFERENCES users(id)
 );`,
-function (err) {
-  if (err) {
-    console.log("Error creating contacts table:", err);
-  } else {
-    console.log("Contacts table created successfully");
+  function (err) {
+    if (err) {
+      console.log("Error creating contacts table:", err);
+    } else {
+      console.log("Contacts table created successfully");
+    }
   }
-}
 );
 
 db.run(
@@ -350,11 +354,25 @@ app.post("/addcart", (req, res) => {
 app.get("/cartItem", (req, res) => {
   var id = req.session.userid;
   var query = `SELECT * FROM cart WHERE user_id = "${id}"`;
-  db.get(query, (err, row) => {
+  db.all(query, (err, row) => {
     if (err) {
       console.log(err);
     } else {
       res.send(row);
+    }
+  });
+});
+
+app.post("/deleteCartItem", (req, res) => {
+  var id = req.body.cartid;
+  var query = `DELETE FROM cart WHERE id = "${id}"`;
+
+  db.run(query, (err) => {
+    if (err) {
+      console.log(err);
+      res.status(404).send("Product can not delete from Cart");
+    } else {
+      res.status(200).send("Product deleted successfully from Cart");
     }
   });
 });
@@ -374,6 +392,24 @@ app.post("/deleteproduct", (req, res) => {
 //Displays all products in stock
 app.get("/products", (req, res) => {
   var query = `SELECT * FROM products WHERE stock > 0`;
+  db.all(query, (err, rows) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(rows);
+      /*
+      rows.forEach((row) => {
+        console.log(row);
+      });
+      */
+      res.send(rows);
+    }
+  });
+});
+
+app.get("/singleproduct/:id", (req, res) => {
+  const id = req.params.id;
+  var query = `SELECT * FROM products WHERE id = ${id}`;
   db.all(query, (err, rows) => {
     if (err) {
       console.log(err);
@@ -412,12 +448,14 @@ app.get("/orders", (req, res) => {
 app.post("/addorder", (req, res) => {
   const productid = req.body.productid;
   const ordercode = req.body.ordercode;
-  const userid = req.body.userid;
+  const userid = req.session.userid;
+  const currentDate = req.app.locals.moment().format("YYYY-MM-DD HH:mm:ss");
+  console.log("Current Date: " + currentDate);
   console.log("userid: " + userid);
   console.log("productid: " + productid);
   db.run(
-    `INSERT INTO orders (user_id, product_id, order_code) VALUES (?, ?, ?)`,
-    [userid, productid, ordercode],
+    `INSERT INTO orders (user_id, product_id, order_code, date_ordered) VALUES (?, ?, ?, ?)`,
+    [userid, productid, ordercode, currentDate],
     (err) => {
       if (err) {
         console.log(err.message);
@@ -548,20 +586,23 @@ function deleteOrder(productid, userid, callback) {
 
 // Find the top 5 donators and send them in descending order
 app.get("/topdonators", (req, res) => {
-  db.all(`SELECT * FROM users WHERE type = "donator" OR type = "Donator" ORDER BY products_given DESC LIMIT 5`, (err, rows) => {
-    if (err) {
-      console.log("Error while finding top 5 domators:");
-      console.log(err);
-    } else {
-      console.log(rows);
-      /*
+  db.all(
+    `SELECT * FROM users WHERE type = "donator" OR type = "Donator" ORDER BY products_given DESC LIMIT 5`,
+    (err, rows) => {
+      if (err) {
+        console.log("Error while finding top 5 domators:");
+        console.log(err);
+      } else {
+        console.log(rows);
+        /*
       rows.forEach((row) => {
         console.log(row);
       });
       */
-      res.status(200).send(rows);
+        res.status(200).send(rows);
+      }
     }
-  })
+  );
 });
 
 app.post("/contacts", (req, res) => {

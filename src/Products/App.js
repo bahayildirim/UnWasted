@@ -41,6 +41,7 @@ const App = () => {
     ).then((res) => {
       console.log(res);
     });
+    window.location.reload();
   };
 
   return (

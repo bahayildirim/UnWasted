@@ -10,14 +10,9 @@ import { faMapLocationDot } from "@fortawesome/free-solid-svg-icons";
 import Axios from "axios";
 
 function AfterOrder() {
-  const [code, setCode] = useState("");
   const [order, setOrder] = useState([]);
   const [user, setUser] = useState([]);
-
-  // useEffect(() => {
-  //   const randomCode = Math.floor(100000 + Math.random() * 900000);
-  //   setCode(randomCode.toString());
-  // }, []);
+  const [product, setProduct] = useState([]);
 
   useEffect(() => {
     async function getorder() {
@@ -32,6 +27,18 @@ function AfterOrder() {
     }
     getorder();
   }, []);
+
+  useEffect(() => {
+    if (order && order.length > 0) {
+      console.log("görmek istediğim order: ", order);
+      Axios.get("http://localhost:8080/singleproduct/" + order[0].product_id, {
+        withCredentials: true,
+      }).then((response) => {
+        setProduct(response.data);
+        console.log("product response ", response.data[0].information);
+      });
+    }
+  }, [order]);
 
   useEffect(() => {
     Axios.get("http://localhost:8080/profile", { withCredentials: true }).then(
@@ -94,7 +101,10 @@ function AfterOrder() {
             </div>
           </div>
           <div className="container-fluid d-flex footer">
-            <p className="footer-text">You chose chicken saute!</p>
+            <p className="footer-text">
+              You chose{" "}
+              {product.length > 0 ? product[0].product_name : <p>...</p>}!
+            </p>
             <p className="footer-text">
               The food is reserved for you. You have <b>60 Minutes</b> to
               recieve

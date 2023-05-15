@@ -92,7 +92,7 @@ function NavScrollExample({ size, setShow, show }) {
   };
 
   function handleClick() {
-    setShow(false);
+    window.location = "/cart";
   }
 
   return (
@@ -166,16 +166,19 @@ function NavScrollExample({ size, setShow, show }) {
                   <MDBIcon fas icon="user-ninja" /> {user.fullname}
                 </MDBDropdownToggle>
                 <MDBDropdownMenu style={menuStyle}>
-                  <MDBDropdownItem link href="/">
+                  <MDBDropdownItem link href="/profile">
                     Profile
                   </MDBDropdownItem>
-                  <MDBDropdownItem link>Orders</MDBDropdownItem>
+                  <MDBDropdownItem link href="/afterOrder">
+                    Orders
+                  </MDBDropdownItem>
                   <MDBDropdownItem link href="/login" onClick={logout}>
                     LogOut
                   </MDBDropdownItem>
                 </MDBDropdownMenu>
               </MDBDropdown>
-              {location.pathname === "/products" ? (
+              {location.pathname === "/products" ||
+              location.pathname === "/cart" ? (
                 <MDBNavbarBrand>
                   <MDBNavbarItem>
                     <div className="cart mb-5" onClick={handleClick}>
