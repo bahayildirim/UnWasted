@@ -1,0 +1,53 @@
+body{
+    height: 100%;
+}
+
+.bg {
+    background-image: url(../HomePage/Assets/Homepage2.png) ;
+    height: 55vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .kart-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+  
+  .kart {
+    width: 22rem;
+    margin: 1rem;
+    box-shadow: 5px 4px 8px 6px #D57149;
+    transition: 0.3s;
+    
+  }
+  
+  .kart:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+  
+  .kart-image {
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .kart-title {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  @media (max-width: 768px) {
+    .kart-container {
+      justify-content: flex-start;
+    }
+    
+    .kart {
+      width: calc(50% - 2rem);
+    }
+  }
+  
+  

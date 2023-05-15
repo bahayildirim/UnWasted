@@ -1,0 +1,35 @@
+* {
+  font-family: "Alumni Sans", sans-serif;
+}
+
+.logo {
+  width: 60%;
+}
+
+.search-bar {
+  border-radius: 20px;
+}
+
+.nav-text {
+  color: #edcfa9;
+  font-size: 25px;
+}
+
+.stack {
+  background-color: white;
+}
+
+.active{
+  color: #EDCFA9 !important;
+}
+
+.button{
+  color: #EDCFA9; 
+  
+  
+}
+
+.form-control {
+  background-color:  #EDCFA9 ; 
+  
+}
