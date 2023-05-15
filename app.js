@@ -47,62 +47,48 @@ function createDatabase() {
       // eslint-disable-next-line no-undef
       exit(1);
     }
-    createTables(newdb);
   });
 }
 
 //Creates the tables for the database
-function createTables(newdb) {
-  newdb.exec(`CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    type TEXT NOT NULL,
-    fullname TEXT NOT NULL,
-    password TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    phone_no INTEGER,
-    address TEXT,
-    logo TEXT
-  );`);
+db.run(`CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  type TEXT NOT NULL,
+  fullname TEXT NOT NULL,
+  password TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  phone_no INTEGER,
+  address TEXT,
+  logo TEXT,
+  products_given INTEGER DEFAULT 0
+);`,
+function (err) {
+  if (err) {
+    console.log("Error creating users table:", err);
+  } else {
+    console.log("Users table created successfully");
+  }
+});
 
-  db.run(
-    `CREATE TABLE IF NOT EXISTS products (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    product_name TEXT NOT NULL,
-    information TEXT NOT NULL,
-    expiration_date DATETIME NOT NULL,
-    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    stock INTEGER NOT NULL,
-    FOREIGN KEY(user_id) REFERENCES users(id)
-  );`,
-    function (err) {
-      if (err) {
-        console.log("Error creating products table:", err);
-      } else {
-        console.log("Products table created successfully");
-      }
+db.run(
+  `CREATE TABLE IF NOT EXISTS products (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  product_name TEXT NOT NULL,
+  information TEXT NOT NULL,
+  expiration_date DATETIME NOT NULL,
+  date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  stock INTEGER NOT NULL,
+  FOREIGN KEY(user_id) REFERENCES users(id)
+);`,
+  function (err) {
+    if (err) {
+      console.log("Error creating products table:", err);
+    } else {
+      console.log("Products table created successfully");
     }
-  );
-
-  db.run(
-    `CREATE TABLE IF NOT EXISTS orders (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    product_id INTEGER NOT NULL,
-    user_id INTEGER NOT NULL,
-    order_code TEXT NOT NULL,
-    date_ordered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(product_id) REFERENCES products(id),
-    FOREIGN KEY(user_id) REFERENCES users(id)
-  );`,
-    function (err) {
-      if (err) {
-        console.log("Error creating orders table:", err);
-      } else {
-        console.log("Orders table created successfully");
-      }
-    }
-  );
-}
+  }
+);
 
 db.run(
   `CREATE TABLE IF NOT EXISTS orders (
@@ -124,20 +110,20 @@ db.run(
 );
 
 db.run(
-  `CREATE TABLE IF NOT EXISTS contacts (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id INTEGER NOT NULL,
-  date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  message TEXT NOT NULL,
-  FOREIGN KEY(user_id) REFERENCES users(id)
+`CREATE TABLE IF NOT EXISTS contacts (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+user_id INTEGER NOT NULL,
+date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+message TEXT NOT NULL,
+FOREIGN KEY(user_id) REFERENCES users(id)
 );`,
-  function (err) {
-    if (err) {
-      console.log("Error creating contacts table:", err);
-    } else {
-      console.log("Contacts table created successfully");
-    }
+function (err) {
+  if (err) {
+    console.log("Error creating contacts table:", err);
+  } else {
+    console.log("Contacts table created successfully");
   }
+}
 );
 
 app.use(
@@ -455,10 +441,11 @@ app.post("/completeorder", (req, res) => {
 
       var query2 = `DELETE FROM products WHERE id = "${productid}" AND stock = 0 
      AND NOT EXISTS (
-         SELECT 2 FROM orders 
+         SELECT * FROM orders 
          LEFT JOIN products ON orders.product_id = products.id 
          WHERE products.id = "${productid}"
          AND orders.user_id = "${userid}"
+         LIMIT 2
      )`;
       db.run(query2, (err) => {
         if (err) {
@@ -510,6 +497,24 @@ function deleteOrder(productid, userid, callback) {
     }
   );
 }
+
+// Find the top 5 donators and send them in descending order
+app.get("/topdonators", (req, res) => {
+  db.all(`SELECT * FROM users WHERE type = "donator" OR type = "Donator" ORDER BY products_given DESC LIMIT 5`, (err, rows) => {
+    if (err) {
+      console.log("Error while finding top 5 domators:");
+      console.log(err);
+    } else {
+      console.log(rows);
+      /*
+      rows.forEach((row) => {
+        console.log(row);
+      });
+      */
+      res.status(200).send(rows);
+    }
+  })
+});
 
 app.post("/contacts", (req, res) => {
   const userid = req.session.userid;
