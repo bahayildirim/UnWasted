@@ -41,6 +41,9 @@ const App = () => {
     ).then((res) => {
       console.log(res);
     });
+
+    alert("Product added successfully to cart");
+
     window.location.reload();
   };
 
