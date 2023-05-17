@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import "./Counter.css";
 
-function CountdownTimer() {
+function CountdownTimer({ productId }) {
   const [order, setOrder] = useState([]);
   const [timeLeft, setTimeLeft] = useState(0);
   const [hours, setHours] = useState("00");
@@ -55,6 +55,14 @@ function CountdownTimer() {
       setHours("00");
       setMinutes("00");
       setSeconds("00");
+
+      Axios.post(
+        "http://localhost:8080/orders",
+        {
+          productid: productId,
+        },
+        { withCredentials: true }
+      );
     }
   }, [timeLeft]);
 

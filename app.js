@@ -213,6 +213,7 @@ app.post("/login", (req, res) => {
         } catch (err) {
           console.log("Login failed, mail or password is wrong.");
           console.log(err.message);
+          res.status(404).redirect("/login");
         }
       }
     }

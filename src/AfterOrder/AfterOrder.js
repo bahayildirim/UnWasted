@@ -116,7 +116,10 @@ function AfterOrder() {
                 className="clockIcon d-flex"
               />
               <p className="footer-text d-flex pt-4">
-                Remaining Time: <Counter />
+                Remaining Time:{" "}
+                <Counter
+                  {...(product.length > 0 ? product[0].product_id : null)}
+                />
               </p>
             </div>
           </div>

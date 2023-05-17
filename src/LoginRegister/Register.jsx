@@ -53,7 +53,6 @@ export const Register = (props) => {
         <h1 className="h1-register">REGISTER</h1>
         <form className="register-form" onSubmit={handleSubmit}>
           <div>
-
             <MDBRadio
               name="inlineRadio"
               id="inlineRadio2"
@@ -72,7 +71,6 @@ export const Register = (props) => {
               onClick={() => setDonator(true)}
               inline
             />
-            
           </div>
           <label htmlFor="email"></label>
           <input
@@ -96,12 +94,11 @@ export const Register = (props) => {
             <>
               <label htmlFor="Address"></label>
               <input
-                value={contact}
+                value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                type="Address"
+                type="text"
                 placeholder="Address"
                 id="Address"
-                name="Address"
               />
             </>
           )}
@@ -131,10 +128,10 @@ export const Register = (props) => {
 
         <button
           className="link-btn"
-          onClick={() => props.onFormSwitch("login")}>
+          onClick={() => props.onFormSwitch("login")}
+        >
           Already have an account? Login here!
         </button>
-
       </div>
     </div>
   );

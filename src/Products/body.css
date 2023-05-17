@@ -35,3 +35,8 @@
 .bodyText {
   color: white;
 }
+
+.companyText {
+  color: black;
+  font-weight: bold;
+}

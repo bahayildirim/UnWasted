@@ -15,6 +15,7 @@ import {
 
 const Amazon = ({ handleClick, products, cartlength }) => {
   const [cart, setCart] = useState([]);
+  const [user, setUser] = useState([]);
 
   useEffect(() => {
     Axios.get("http://localhost:8080/cartItem", { withCredentials: true }).then(
@@ -24,6 +25,17 @@ const Amazon = ({ handleClick, products, cartlength }) => {
       }
     );
   }, []);
+
+  useEffect(() => {
+    products.forEach((product) => {
+      Axios.get("http://localhost:8080/profile/" + product.user_id).then(
+        (response) => {
+          setUser((prevUsers) => [...prevUsers, response.data]);
+          console.log("user değeri: " + response.data.fullname);
+        }
+      );
+    });
+  }, [products]);
 
   return (
     <section
@@ -44,6 +56,9 @@ const Amazon = ({ handleClick, products, cartlength }) => {
               </MDBCardTitle>
               <MDBCardText className="bodyText">
                 {product.information}
+              </MDBCardText>
+              <MDBCardText className="companyText">
+                {user[index]?.fullname}
               </MDBCardText>
               <MDBBtn
                 href="#"
