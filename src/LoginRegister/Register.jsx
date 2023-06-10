@@ -1,4 +1,5 @@
 import React, {
+  useEffect,
   useState,
 } from "react"; /*useState Bileşeni globalde state yönetmemizi sağlar*/
 import Axios from "axios";
@@ -15,31 +16,26 @@ export const Register = (props) => {
   const [type, setType] = useState("");
   const [address, setAddress] = useState("");
   const [donator, setDonator] = useState(false);
-
-  const handleSubmit = (e) => {
-    /*Capture when user submit form*/
-    /*Bu yapilmazsa sayfa reload atar state kaybolur*/
-    console.log(email);
-  };
-
-  const [first, setFirst] = useState(true);
-
-  const handleChange = (data) => {
-    console.log(data, "our value");
-  };
+  const [file, setFile] = useState();
 
   const register = () => {
-    Axios.post("http://localhost:8080/register", {
-      password: pass,
-      email: email,
-      fullname: name,
-      phone_no: contact,
-      type: type,
-      address: address,
-    }).then((response) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("password", pass);
+    formData.append("email", email);
+    formData.append("fullname", name);
+    formData.append("phone_no", contact);
+    formData.append("type", type);
+    formData.append("address", address);
+
+    Axios.post("http://localhost:8080/register", formData).then((response) => {
       console.log(response);
     });
   };
+
+  useEffect(() => {
+    console.log("Dosya ismi: " + file);
+  }, [file]);
 
   return (
     <div>
@@ -51,7 +47,11 @@ export const Register = (props) => {
 
       <div className="auth-form-container">
         <h1 className="h1-register">REGISTER</h1>
-        <form className="register-form" onSubmit={handleSubmit}>
+        <form
+          className="register-form"
+          enctype="multipart/form-data"
+          method="POST"
+        >
           <div>
             <MDBRadio
               name="inlineRadio"
@@ -100,6 +100,12 @@ export const Register = (props) => {
                 placeholder="Address"
                 id="Address"
               />
+              <input
+                filename={file}
+                onChange={(e) => setFile(e.target.files[0])}
+                type="file"
+                accept="image/*"
+              ></input>
             </>
           )}
           <label htmlFor="contactNumber"></label>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import Axios from "axios";
 
@@ -20,6 +20,16 @@ function FormPopup({ contact, location }) {
 
     window.location.reload();
   };
+
+  const [user, setUser] = useState([]);
+
+  useEffect(() => {
+    Axios.get("http://localhost:8080/profile/" + 3, {
+      withCredentials: true,
+    }).then((response) => {
+      setUser(response.data);
+    });
+  }, []);
 
   return (
     <>
@@ -45,6 +55,18 @@ function FormPopup({ contact, location }) {
                     rows={3}
                     disabled
                     value={contact.message}
+                  />
+                </Form.Group>
+                <Form.Group
+                  className="mb-3"
+                  controlId="exampleForm.ControlInput1"
+                >
+                  <Form.Label>User Name</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    disabled
+                    value={user.fullname}
                   />
                 </Form.Group>
                 {contact.status === "SOLVED" ? (

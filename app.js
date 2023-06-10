@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const sqlite3 = require("sqlite3");
 const cors = require("cors");
+const multer = require("multer");
+const fileUpload = require("express-fileupload");
 
 //for session and its storage
 const session = require("express-session");
@@ -16,6 +18,8 @@ const sessiondb = new sqlite("sessions.db");
 
 app.use(express.json()); // Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
+app.use(fileUpload());
+app.use(express.static("public"));
 
 const corsOptions = {
   origin: "http://localhost:3000",
@@ -148,6 +152,8 @@ db.run(
   }
 );
 
+// ALTER TABLE users ADD COLUMN isAdmin BOOLEAN DEFAULT 0;
+
 app.use(
   session({
     store: new SqliteStore({
@@ -172,10 +178,17 @@ app.post("/register", (req, res) => {
   const email = req.body.email;
   const phone_no = req.body.phone_no;
   const address = req.body.address;
-  const logo = req.body.logo;
   const type = req.body.type;
+  const { image } = req.files;
+
+  // If no image submitted, exit
+  if (!image) return res.sendStatus(400);
+
+  // Move the uploaded image to our upload folder
+  image.mv(__dirname + "/public/Images/CompanyLogos/" + image.name);
   db.run(
-    `INSERT INTO users (fullname, password, email, phone_no, address, logo, type) VALUES ("${fullname}", "${password}", "${email}", "${phone_no}", "${address}", "${logo}", "${type}")`,
+    `INSERT INTO users (fullname, password, email, phone_no, address, logo, type) 
+    VALUES ("${fullname}", "${password}", "${email}", "${phone_no}", "${address}", "${image.name}", "${type}")`,
     (err) => {
       if (err) {
         console.log(err.message);

@@ -22,6 +22,8 @@ export default function Profile() {
   const [user, setUser] = useState([]);
   const [changedData, setChangedData] = useState({});
   const [userid, setuserid] = useState();
+  const imagePath =
+    process.env.PUBLIC_URL + `/Images/CompanyLogos/${user.logo}`;
 
   // useEffect(() => {
   //   try {
@@ -85,7 +87,7 @@ export default function Profile() {
                     }}
                   >
                     <MDBCardImage
-                      src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
+                      src={imagePath}
                       alt="Avatar"
                       className="my-5"
                       style={{ width: "80px" }}

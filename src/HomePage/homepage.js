@@ -25,13 +25,13 @@ function App() {
   const [stock, setStock] = useState();
   const [describe, setDescribe] = useState();
   const [time, setTime] = useState();
-  const [products, setProducts] = useState([]);
+  const [donators, setDonators] = useState([]);
 
   useEffect(() => {
-    Axios.get("http://localhost:8080/products").then((response) => {
-      setProducts(response.data);
+    Axios.get("http://localhost:8080/topdonators").then((response) => {
+      setDonators(response.data);
     });
-  }, [products]);
+  }, []);
 
   return (
     <div>
@@ -68,16 +68,19 @@ function App() {
             </MDBCardText>
           </MDBCardBody>
         </MDBCard>
-        {products.map((product) => {
+        {donators.map((donator) => {
+          const imagePath =
+            process.env.PUBLIC_URL + `/Images/CompanyLogos/${donator.logo}`;
           return (
             <MDBCard className="kart" style={{ width: "22rem" }}>
               <MDBCardImage
-                src="https://via.placeholder.com/400x200"
+                src={imagePath}
                 alt="Card image cap"
+                className="kart-image"
               />
               <MDBCardBody>
-                <MDBCardTitle>{product.product_name}</MDBCardTitle>
-                <MDBCardText>{product.information}</MDBCardText>
+                <MDBCardTitle>{donator.fullname}</MDBCardTitle>
+                <MDBCardText>denemememememememe</MDBCardText>
               </MDBCardBody>
             </MDBCard>
           );
