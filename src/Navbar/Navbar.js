@@ -39,6 +39,7 @@ import { useLocation } from "react-router-dom";
 function NavScrollExample({ size, setShow, show }) {
   const [showBasic, setShowBasic] = useState(false);
   const [user, setUser] = useState([]);
+  const [isDonator, setIsDonator] = useState(false);
 
   const location = useLocation();
 
@@ -95,6 +96,8 @@ function NavScrollExample({ size, setShow, show }) {
     window.location = "/cart";
   }
 
+  console.log("User tipi: " + user.type);
+
   return (
     <MDBNavbar expand="lg" light>
       <MDBContainer fluid>
@@ -127,6 +130,15 @@ function NavScrollExample({ size, setShow, show }) {
                 </MDBNavbarLink>
               </MDBNavbarItem>
             </MDBNavbarBrand>
+            {user && user.type === "Donator" && (
+              <MDBNavbarBrand>
+                <MDBNavbarItem>
+                  <MDBNavbarLink active aria-current="page" href="/addProduct">
+                    Add Products
+                  </MDBNavbarLink>
+                </MDBNavbarItem>
+              </MDBNavbarBrand>
+            )}
             <MDBNavbarBrand>
               <MDBNavbarItem>
                 <MDBNavbarLink active aria-current="page" href="contactUs">
