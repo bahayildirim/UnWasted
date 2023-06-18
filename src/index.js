@@ -16,6 +16,7 @@ import AdminPage from "./AdminPage/AdminPage";
 import Homepage from "./HomePage/homepage";
 import Products from "./Products/App";
 import Cart from "./Products/Cart";
+import AboutUs from "./AboutUs/aboutus"
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
     path: "/cart",
     element: <Cart />,
   },
+  {
+    path: "/Aboutus",
+    element: <AboutUs />,
+  }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

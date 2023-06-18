@@ -39,65 +39,31 @@ function App() {
         <Navbar />
       </div>
       <div className="d-flex">
-        <MDBCard
-          className="kart"
-          style={{ width: "22rem", marginRight: "1rem" }}
-        >
-          <MDBCardImage
-            src="https://via.placeholder.com/400x200"
-            alt="Card image cap"
-          />
-          <MDBCardBody>
-            <MDBCardTitle>Card 1 Title</MDBCardTitle>
-            <MDBCardText>
-              This is some text within a card body. Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit.
-            </MDBCardText>
-          </MDBCardBody>
-        </MDBCard>
-        <MDBCard className="kart" style={{ width: "22rem" }}>
-          <MDBCardImage
-            src="https://via.placeholder.com/400x200"
-            alt="Card image cap"
-          />
-          <MDBCardBody>
-            <MDBCardTitle>Card 2 Title</MDBCardTitle>
-            <MDBCardText>
-              This is some text within a card body. Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit.
-            </MDBCardText>
-          </MDBCardBody>
-        </MDBCard>
         {donators.map((donator) => {
-          const imagePath =
-            process.env.PUBLIC_URL + `/Images/CompanyLogos/${donator.logo}`;
+          let imagePath = donator.logo
+          ? `${process.env.PUBLIC_URL}/Images/CompanyLogos/${donator.logo}`
+          : `${process.env.PUBLIC_URL}/Images/yemek.jpeg`;
+    
           return (
-            <MDBCard className="kart" style={{ width: "22rem" }}>
-              <MDBCardImage
-                src={imagePath}
-                alt="Card image cap"
-                className="kart-image"
-              />
+            <MDBCard  className="kart" style={{ width: "22rem" , backgroundColor: "#EDCFA9"}}>
+             <div className="image-container">
+                <MDBCardImage
+                  src={imagePath}
+                  alt="Card image cap"
+                  className="logo-image"
+                />
+              </div>
               <MDBCardBody>
                 <MDBCardTitle>{donator.fullname}</MDBCardTitle>
-                <MDBCardText>denemememememememe</MDBCardText>
+                <MDBCardText >
+                  <a href="/products" style={{textDecoration: "none", color: "black" }}>
+                    <strong>Best Donator</strong>
+                  </a>
+              </MDBCardText>
               </MDBCardBody>
             </MDBCard>
           );
         })}
-        <MDBCard className="kart" style={{ width: "22rem" }}>
-          <MDBCardImage
-            src="https://via.placeholder.com/400x200"
-            alt="Card image cap"
-          />
-          <MDBCardBody>
-            <MDBCardTitle>Card 2 Title</MDBCardTitle>
-            <MDBCardText>
-              This is some text within a card body. Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit.
-            </MDBCardText>
-          </MDBCardBody>
-        </MDBCard>
       </div>
       <MDBFooter
         bgColor="#EDCFA9"
@@ -129,7 +95,7 @@ function App() {
                 </p>
                 <p>
                   <MDBIcon color="secondary" icon="phone" className="me-3" />{" "}
-                  +90 530 793 1946
+                  +90 539 796 1947
                 </p>
               </MDBCol>
             </MDBRow>

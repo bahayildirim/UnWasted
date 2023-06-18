@@ -16,6 +16,7 @@ import {
 const Amazon = ({ handleClick, products, cartlength }) => {
   const [cart, setCart] = useState([]);
   const [user, setUser] = useState([]);
+  
 
   useEffect(() => {
     Axios.get("http://localhost:8080/cartItem", { withCredentials: true }).then(
@@ -38,42 +39,52 @@ const Amazon = ({ handleClick, products, cartlength }) => {
   }, [products]);
 
   return (
-    <section
-      className="generalBody"
-      style={{ display: "flex", flexWrap: "wrap" }}
-    >
+    <section className="generalBody">
+    <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
       {products.map((product, index) => (
-        <div style={{ width: "33.33%" }} key={index}>
-          <MDBCard className="card1">
-            <MDBCardImage
-              src="https://siradisidigital.com/upload/yemek-fotografi-nasil-cekilir-ankara-dijital-ajans-siradisi-digital-5.jpg"
-              position="top"
-              alt="..."
-            />
-            <MDBCardBody>
-              <MDBCardTitle className="bodyText">
-                {product.product_name}
-              </MDBCardTitle>
-              <MDBCardText className="bodyText">
-                {product.information}
-              </MDBCardText>
-              <MDBCardText className="companyText">
-                {user[index]?.fullname}
-              </MDBCardText>
-              <MDBBtn
-                href="#"
-                onClick={() => handleClick(product)}
-                className="ripple1"
-                disabled={cart.length > 0 ? true : false}
-              >
-                Add Cart
-              </MDBBtn>
-            </MDBCardBody>
-          </MDBCard>
-        </div>
+        <MDBCard className="card1" style={{ width: "300px", margin: "20px" }} key={index}>
+          <MDBCardImage
+            src="https://siradisidigital.com/upload/yemek-fotografi-nasil-cekilir-ankara-dijital-ajans-siradisi-digital-5.jpg"
+            position="top"
+            alt="..."
+            style={{ height: "200px", objectFit: "cover" }}
+          />
+          <MDBCardBody style={{ backgroundColor: "#E89F71" }}>
+            <MDBCardTitle className="bodyText" style={{ color: "#D57149", fontSize: "1.5rem" }}>
+              {product.product_name}
+            </MDBCardTitle>
+            <MDBCardText className="bodyText" style={{ marginBottom: "1rem" }}>
+              {product.information}
+            </MDBCardText>
+            <MDBCardText className="companyText" style={{ color: "#AA4A30", fontSize: "1rem" }}>
+              {user[index]?.fullname}
+            </MDBCardText>
+            <MDBBtn
+              href="#"
+              onClick={() => handleClick(product)}
+              className="ripple1"
+              disabled={cart.length > 0}
+             style={{
+                backgroundColor: "#AA4A30",
+                marginTop: "1rem",
+                boxShadow: "none",
+                border: "none",
+                width: "200px", // Adjust the width as needed
+                height: "50px", // Adjust the height as needed
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              Add to Cart
+            </MDBBtn>
+          </MDBCardBody>
+        </MDBCard>
       ))}
-    </section>
+    </div>
+  </section>
   );
 };
+
 
 export default Amazon;

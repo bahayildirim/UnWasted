@@ -39,8 +39,8 @@ import { useLocation } from "react-router-dom";
 function NavScrollExample({ size, setShow, show }) {
   const [showBasic, setShowBasic] = useState(false);
   const [user, setUser] = useState([]);
-  const [isDonator, setIsDonator] = useState(false);
-
+  const [cartSize, setCartSize] = useState(size);
+  
   const location = useLocation();
 
   useEffect(() => {
@@ -94,9 +94,8 @@ function NavScrollExample({ size, setShow, show }) {
 
   function handleClick() {
     window.location = "/cart";
+    setCartSize(prevSize => prevSize + 1);
   }
-
-  console.log("User tipi: " + user.type);
 
   return (
     <MDBNavbar expand="lg" light>
@@ -131,14 +130,14 @@ function NavScrollExample({ size, setShow, show }) {
               </MDBNavbarItem>
             </MDBNavbarBrand>
             {user && user.type === "Donator" && (
-              <MDBNavbarBrand>
-                <MDBNavbarItem>
-                  <MDBNavbarLink active aria-current="page" href="/addProduct">
-                    Add Products
-                  </MDBNavbarLink>
-                </MDBNavbarItem>
-              </MDBNavbarBrand>
-            )}
+               <MDBNavbarBrand>
+                 <MDBNavbarItem>
+                   <MDBNavbarLink active aria-current="page" href="/addProduct">
+                     Add Products
+                   </MDBNavbarLink>
+                 </MDBNavbarItem>
+               </MDBNavbarBrand>
+             )}
             <MDBNavbarBrand>
               <MDBNavbarItem>
                 <MDBNavbarLink active aria-current="page" href="contactUs">
@@ -157,7 +156,7 @@ function NavScrollExample({ size, setShow, show }) {
             ) : null}
             <MDBNavbarBrand>
               <MDBNavbarItem>
-                <MDBNavbarLink active aria-current="page" href="#">
+                <MDBNavbarLink active aria-current="page" href="Aboutus">
                   About Us
                 </MDBNavbarLink>
               </MDBNavbarItem>
@@ -192,14 +191,12 @@ function NavScrollExample({ size, setShow, show }) {
               {location.pathname === "/products" ||
               location.pathname === "/cart" ? (
                 <MDBNavbarBrand>
-                  <MDBNavbarItem>
-                    <div className="cart mb-5" onClick={handleClick}>
-                      <span>
-                        <i className="fas fa-cart-plus"></i>
-                      </span>
-                      <span>{size}</span>
-                    </div>
-                  </MDBNavbarItem>
+                  
+                  <div className="cart" onClick={handleClick} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                    <MDBIcon fas icon="shopping-cart" size="sm" style={{ marginRight: '0.5rem' }} />
+                    <span>{cartSize}</span>
+                  </div>
+                  
                 </MDBNavbarBrand>
               ) : null}
             </>

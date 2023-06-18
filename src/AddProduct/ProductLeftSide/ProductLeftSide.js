@@ -3,14 +3,22 @@ import Axios from "axios";
 import Navbar from "../../Navbar/Navbar.js";
 import "bootstrap/dist/css/bootstrap.css";
 import "./ProductLeftSide.css";
+import { MDBContainer, MDBInput, MDBBtn ,MDBRow, MDBCol, MDBCard, MDBCardBody } from "mdb-react-ui-kit";
+import ProductCard from "../ProductCard/ProductCard";
 
 function App() {
-  //const [check, setCheck] = useState(false);
-  const [productName, setProductName] = useState();
-  const [stock, setStock] = useState();
-  const [describe, setDescribe] = useState();
-  const [time, setTime] = useState();
-  const [userid, setuserid] = useState();
+  const [productName, setProductName] = useState("");
+  const [stock, setStock] = useState("");
+  const [describe, setDescribe] = useState("");
+  const [time, setTime] = useState("");
+  const [userid, setuserid] = useState("");
+  const [products, setProduct] = useState([]);
+
+  useEffect(() => {
+    Axios.get("http://localhost:8080/products").then((response) => {
+      setProduct(response.data);
+    });
+  }, []);
 
   useEffect(() => {
     async function getcookie() {
@@ -22,6 +30,7 @@ function App() {
     getcookie();
   }, []);
 
+  
   function addItem() {
     Axios.post("http://localhost:8080/addproduct", {
       productname: productName,
@@ -34,114 +43,71 @@ function App() {
       window.location.reload();
     });
   }
-  // const handleCheckboxChange = (event) => {
-  // setCheck(event.target.checked);
-  //};
 
   return (
     <div>
       <div className="Addproduct">
-        <div className="container d-flex formHeader">
+        <MDBContainer className="container-lg d-flex formHeader">
           <h1 className="formHeaderText">Add Product</h1>
-        </div>
+        </MDBContainer>
         <form className="formcss">
-          <div class="form-outline mb-4">
-            <input
+          <MDBContainer className="mb-4">
+            <MDBInput
               type="text"
               id="form4Example1"
-              class="form-control"
+              label="Product Name"
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
-            />
-            <label
               style={{ color: "#4F261A" }}
-              class="form-label"
-              for="form4Example1"
-            >
-              Product Name
-            </label>
-          </div>
+            />
+          </MDBContainer>
 
-          <div class="form-outline mb-4">
-            <input
+          <MDBContainer className="mb-4">
+            <MDBInput
               type="number"
               id="form4Example2"
-              class="form-control"
+              label="Stock"
               value={stock}
               onChange={(e) => setStock(e.target.value)}
-            />
-            <label
               style={{ color: "#4F261A" }}
-              class="form-label"
-              for="form4Example2"
-            >
-              Stock
-            </label>
-          </div>
+            />
+          </MDBContainer>
 
-          <div
-            class="form-outline mb-4"
-            //style={{ display: check ? "none" : "block" }}
-          >
-            <input
+          <MDBContainer className="mb-4">
+            <MDBInput
               type="date"
-              id="form4Example2"
-              class="form-control"
+              id="form4Example3"
+              label="Time"
               value={time}
               onChange={(e) => setTime(e.target.value)}
-            />
-            <label
               style={{ color: "#4F261A" }}
-              class="form-label"
-              for="form4Example2"
-            >
-              Time
-            </label>
-          </div>
+            />
+          </MDBContainer>
 
-          <div class="form-outline mb-4">
-            <textarea
-              class="form-control"
-              id="form4Example3"
+          <MDBContainer className="mb-4">
+            <MDBInput
+              type="textarea"
+              id="form4Example4"
+              label="Please describe the product"
               rows="4"
               value={describe}
               onChange={(e) => setDescribe(e.target.value)}
-            ></textarea>
-            <label
               style={{ color: "#4F261A" }}
-              class="form-label"
-              for="form4Example3"
-            >
-              {" "}
-              Please describe the product
-            </label>
-          </div>
+            />
+          </MDBContainer>
 
-          <button
-            type="submit"
+          <MDBBtn
+            color="primary"
+            className="btn-block mb-4"
+            onClick={addItem}
             style={{
               background: "#EDCFA9",
               borderColor: "transparent",
               boxShadow: "none",
             }}
-            onClick={addItem}
-            class="btn btn-primary btn-block mb-4 "
           >
             Add Food
-          </button>
-
-          {/*<div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              checked={check}
-              onChange={handleCheckboxChange}
-              id="flexCheckDefault"
-            />
-            <label class="form-check-label" for="flexCheckDefault">
-              Free
-            </label>
-  </div>*/}
+          </MDBBtn>
         </form>
       </div>
     </div>
