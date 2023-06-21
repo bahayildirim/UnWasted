@@ -3,12 +3,14 @@ import { useEffect } from "react";
 import "./cart.css";
 import Axios from "axios";
 import Navbar from "../Navbar/Navbar";
+import { MDBContainer } from "mdb-react-ui-kit";
 
 const Cart = ({}) => {
   const [readIngredient, setreadIngredient] = useState(false);
   const [cart, setCart] = useState([]);
   const [product, setProduct] = useState([]);
   const [code, setCode] = useState("");
+  const [imagePath, setimagePath] = useState("");
 
   useEffect(() => {
     const randomCode = Math.floor(100000 + Math.random() * 900000);
@@ -29,6 +31,10 @@ const Cart = ({}) => {
           .then((response) => {
             setProduct(response.data);
             console.log("product response ", response.data[0].information);
+            setimagePath(
+              process.env.PUBLIC_URL +
+                `/Images/ProductImages/${response.data[0].image}`
+            );
           })
           .catch((error) => {
             console.log("Bir hata oluştu: ", error);
@@ -70,43 +76,42 @@ const Cart = ({}) => {
   };
 
   return (
-    <article>
+    <div className="main">
       <Navbar />
-      {product.length > 0 ? (
-        <div>
-          <div className="cart_box" key={cart.id}>
-            <div className="cart_img">
-              <img
-                src="https://siradisidigital.com/upload/yemek-fotografi-nasil-cekilir-ankara-dijital-ajans-siradisi-digital-5.jpg"
-                alt={cart.img}
+      <MDBContainer className="cardbody">
+        {product.length > 0 ? (
+          <div>
+            <div className="cart_box" key={cart.id}>
+              <div className="cart_img">
+                <img src={imagePath} alt={cart.img} />
+                <p>{product[0].product_name}</p>
+              </div>
+              <div className="cartIngredient">{product[0].information}</div>
+              <div>
+                <button onClick={() => handleRemove(cart[0].id)}>Remove</button>
+              </div>
+            </div>
+            <br></br>
+            <label className="readIngredients">
+              <input
+                onClick={() => setreadIngredient(!readIngredient)}
+                type="checkbox"
               />
-              <p>{product[0].product_name}</p>
-            </div>
-            <div className="cartIngredient">{product[0].information}</div>
-            <div>
-              <button onClick={() => handleRemove(cart[0].id)}>Remove</button>
-            </div>
+              {" I accept that I have read the ingredients."}
+            </label>
+            <button
+              disabled={!readIngredient || cart.length === 0}
+              onClick={() => confirmOrder(product[0].id, cart[0].id)}
+              className="total"
+            >
+              Confirm Order
+            </button>
           </div>
-          <br></br>
-          <label className="readIngredients">
-            <input
-              onClick={() => setreadIngredient(!readIngredient)}
-              type="checkbox"
-            />
-            {" I accept that I have read the ingredients."}
-          </label>
-          <button
-            disabled={!readIngredient || cart.length === 0}
-            onClick={() => confirmOrder(product[0].id, cart[0].id)}
-            className="total"
-          >
-            Confirm Order
-          </button>
-        </div>
-      ) : (
-        <h1 className="empty">Your cart is empty!</h1>
-      )}
-    </article>
+        ) : (
+          <h1 className="empty">Your cart is empty!</h1>
+        )}
+      </MDBContainer>
+    </div>
   );
 };
 

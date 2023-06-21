@@ -4,6 +4,7 @@ const sqlite3 = require("sqlite3");
 const cors = require("cors");
 const multer = require("multer");
 const fileUpload = require("express-fileupload");
+const bcrypt = require("bcrypt");
 
 //for session and its storage
 const session = require("express-session");
@@ -87,6 +88,7 @@ db.run(
   expiration_date DATETIME NOT NULL,
   date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   stock INTEGER NOT NULL,
+  image Text NOT NULL,
   FOREIGN KEY(user_id) REFERENCES users(id)
 );`,
   function (err) {
@@ -179,16 +181,27 @@ app.post("/register", (req, res) => {
   const phone_no = req.body.phone_no;
   const address = req.body.address;
   const type = req.body.type;
-  const { image } = req.files;
+  var imageName = null;
 
-  // If no image submitted, exit
-  if (!image) return res.sendStatus(400);
+  if (type === "Donator") {
+    const { image } = req.files;
 
-  // Move the uploaded image to our upload folder
-  image.mv(__dirname + "/public/Images/CompanyLogos/" + image.name);
+    // If no image submitted, exit
+    if (!image) return res.sendStatus(400);
+
+    // Move the uploaded image to our upload folder
+    image.mv(__dirname + "/public/Images/CompanyLogos/" + image.name);
+    imageName = image.name;
+  }
+
+  //hash password
+  const hashedPassword = hashPassword(password);
+
   db.run(
     `INSERT INTO users (fullname, password, email, phone_no, address, logo, type) 
-    VALUES ("${fullname}", "${password}", "${email}", "${phone_no}", "${address}", "${image.name}", "${type}")`,
+    VALUES ("${fullname}", "${hashedPassword}", "${email}", "${phone_no}", "${address}", "${
+      type == "Donator" ? imageName : null
+    }", "${type}")`,
     (err) => {
       if (err) {
         console.log(err.message);
@@ -204,33 +217,50 @@ app.post("/register", (req, res) => {
   res.status(200).redirect("/login");
 });
 
+//Hashing
+const saltRounds = 10;
+
+const hashPassword = (password) => {
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const hash = bcrypt.hashSync(password, salt);
+  return hash;
+};
+
+const comparePassword = (password, hashedPassword) => {
+  const match = bcrypt.compareSync(password, hashedPassword);
+  return match;
+};
+
 //Checks login information and either redirects to login page or to home page depending on a successful login
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  db.get(
-    `SELECT * FROM Users WHERE email = "${email}" AND password = "${password}"`,
-    (err, row) => {
-      if (err) {
-        console.log(err.message);
-      } else {
-        try {
-          if (row.email != null && row.password != null) {
-            console.log("Login successful: " + row.email + " " + row.password);
-            req.session.userid = row.id;
-            console.log(req.session.userid);
-            console.log(req.session);
-            req.session.save();
-            res.status(200).redirect("/");
-          }
-        } catch (err) {
-          console.log("Login failed, mail or password is wrong.");
-          console.log(err.message);
-          res.status(404).redirect("/login");
+
+  const hashedPassword = hashPassword(password);
+  console.log("Hashlenmiş Şifre:", hashedPassword);
+
+  db.get(`SELECT * FROM Users WHERE email = "${email}"`, (err, row) => {
+    if (err) {
+      console.log(err.message);
+    } else {
+      try {
+        if (row.email != null && comparePassword(password, row.password)) {
+          console.log("Login successful: " + row.email + " " + row.password);
+          req.session.userid = row.id;
+          console.log(req.session.userid);
+          console.log(req.session);
+          req.session.save();
+          res.status(200).redirect("/");
+        } else {
+          throw err;
         }
+      } catch (err) {
+        console.log("Login failed, mail or password is wrong.");
+        console.log(err.message);
+        res.status(404).redirect("/login");
       }
     }
-  );
+  });
 });
 
 app.get("/logout", (req, res) => {
@@ -329,13 +359,21 @@ app.post("/addproduct", (req, res) => {
   const expirationdate = req.body.expirationdate;
   const stock = req.body.stock;
   const information = req.body.information;
+  const { image } = req.files;
+
+  // If no image submitted, exit
+  if (!image) return res.sendStatus(400);
+
+  // Move the uploaded image to our upload folder
+  image.mv(__dirname + "/public/Images/ProductImages/" + image.name);
+
   //Automatically add donator's id to the database
   console.log("add product userid: " + req.body.userid);
   const userid = req.body.userid;
   console.log("useridsession: " + req.session.userid);
   db.run(
-    `INSERT INTO products (user_id, product_name, expiration_date, stock, information) VALUES (?, ?, ?, ?, ?)`,
-    [userid, productname, expirationdate, stock, information],
+    `INSERT INTO products (user_id, product_name, expiration_date, stock, information, image) VALUES (?, ?, ?, ?, ?, ?)`,
+    [userid, productname, expirationdate, stock, information, image.name],
     (err) => {
       if (err) {
         console.log(err.message);
@@ -424,6 +462,24 @@ app.get("/products", (req, res) => {
 app.get("/singleproduct/:id", (req, res) => {
   const id = req.params.id;
   var query = `SELECT * FROM products WHERE id = ${id}`;
+  db.all(query, (err, rows) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(rows);
+      /*
+      rows.forEach((row) => {
+        console.log(row);
+      });
+      */
+      res.send(rows);
+    }
+  });
+});
+
+app.get("/myproducts", (req, res) => {
+  const userid = req.session.userid;
+  var query = `SELECT * FROM products WHERE user_id = ${userid}`;
   db.all(query, (err, rows) => {
     if (err) {
       console.log(err);

@@ -13,6 +13,7 @@ function AfterOrder() {
   const [order, setOrder] = useState([]);
   const [user, setUser] = useState([]);
   const [product, setProduct] = useState([]);
+  const [imagePath, setimagePath] = useState("");
 
   useEffect(() => {
     async function getorder() {
@@ -36,17 +37,23 @@ function AfterOrder() {
       }).then((response) => {
         setProduct(response.data);
         console.log("product response ", response.data[0].information);
+        setimagePath(
+          process.env.PUBLIC_URL +
+            `/Images/ProductImages/${response.data[0].image}`
+        );
       });
     }
   }, [order]);
 
   useEffect(() => {
-    Axios.get("http://localhost:8080/profile", { withCredentials: true }).then(
-      (response) => {
+    if (order && order.length > 0) {
+      Axios.get(`http://localhost:8080/profile/${product[0].user_id}`, {
+        withCredentials: true,
+      }).then((response) => {
         setUser(response.data);
-      }
-    );
-  }, []);
+      });
+    }
+  }, [product]);
 
   const handleAddressClick = () => {
     const address = user.address;
@@ -89,9 +96,9 @@ function AfterOrder() {
             </div>
             <div className="container d-flex me-4 productImage">
               <img
-                src={productImage}
+                src={imagePath}
                 alt="ProductImage"
-                className="w-100 h-100"
+                className="w-100 h-100 rounded-4"
               />
             </div>
             <div className="container d-flex codeBox">

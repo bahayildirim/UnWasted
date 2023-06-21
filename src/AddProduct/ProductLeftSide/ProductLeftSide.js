@@ -3,7 +3,16 @@ import Axios from "axios";
 import Navbar from "../../Navbar/Navbar.js";
 import "bootstrap/dist/css/bootstrap.css";
 import "./ProductLeftSide.css";
-import { MDBContainer, MDBInput, MDBBtn ,MDBRow, MDBCol, MDBCard, MDBCardBody } from "mdb-react-ui-kit";
+import {
+  MDBContainer,
+  MDBInput,
+  MDBBtn,
+  MDBRow,
+  MDBCol,
+  MDBCard,
+  MDBCardBody,
+  MDBFile,
+} from "mdb-react-ui-kit";
 import ProductCard from "../ProductCard/ProductCard";
 
 function App() {
@@ -13,6 +22,7 @@ function App() {
   const [time, setTime] = useState("");
   const [userid, setuserid] = useState("");
   const [products, setProduct] = useState([]);
+  const [file, setFile] = useState();
 
   useEffect(() => {
     Axios.get("http://localhost:8080/products").then((response) => {
@@ -30,19 +40,26 @@ function App() {
     getcookie();
   }, []);
 
-  
   function addItem() {
-    Axios.post("http://localhost:8080/addproduct", {
-      productname: productName,
-      stock: stock,
-      expirationdate: time,
-      information: describe,
-      userid: userid,
-    }).then((response) => {
-      console.log(response);
-      window.location.reload();
-    });
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("productname", productName);
+    formData.append("stock", stock);
+    formData.append("expirationdate", time);
+    formData.append("information", describe);
+    formData.append("userid", userid);
+
+    Axios.post("http://localhost:8080/addproduct", formData).then(
+      (response) => {
+        console.log(response);
+        window.location.reload();
+      }
+    );
   }
+
+  useEffect(() => {
+    console.log("Dosya ismi: " + file);
+  }, [file]);
 
   return (
     <div>
@@ -96,12 +113,23 @@ function App() {
             />
           </MDBContainer>
 
+          <MDBContainer className="mb-4">
+            <MDBFile
+              type="file"
+              label="Please add product's image"
+              id="customfile"
+              filename={file}
+              onChange={(e) => setFile(e.target.files[0])}
+              accept="image/*"
+            />
+          </MDBContainer>
+
           <MDBBtn
             color="primary"
             className="btn-block mb-4"
             onClick={addItem}
             style={{
-              background: "#EDCFA9",
+              background: "#d57149",
               borderColor: "transparent",
               boxShadow: "none",
             }}

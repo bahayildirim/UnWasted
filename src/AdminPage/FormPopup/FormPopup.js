@@ -24,11 +24,11 @@ function FormPopup({ contact, location }) {
   const [user, setUser] = useState([]);
 
   useEffect(() => {
-    Axios.get("http://localhost:8080/profile/" + 3, {
-      withCredentials: true,
-    }).then((response) => {
-      setUser(response.data);
-    });
+    Axios.get(`http://localhost:8080/profile/${contact.user_id}`).then(
+      (response) => {
+        setUser(response.data);
+      }
+    );
   }, []);
 
   return (

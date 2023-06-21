@@ -6,7 +6,9 @@ function RightBody() {
   const [products, setProduct] = useState([]);
 
   useEffect(() => {
-    Axios.get("http://localhost:8080/products").then((response) => {
+    Axios.get("http://localhost:8080/myproducts", {
+      withCredentials: true,
+    }).then((response) => {
       setProduct(response.data);
     });
   }, []);
